@@ -1,36 +1,24 @@
 package controller;
 
+import dto.TurnoEdicion;
+import dto.TurnoRegistro;
 import entity.EstadoTurno;
 import entity.Turno;
 import service.TurnoServiceImpl;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public class TurnoController {
 
-    private TurnoServiceImpl turnoService;
+    private final TurnoServiceImpl turnoService;
 
     public TurnoController(TurnoServiceImpl turnoService) {
         this.turnoService = turnoService;
     }
 
-    public Turno registrarTurno(Long idPaciente,
-                                Long idOdontologo,
-                                Long idSecretaria,
-                                LocalDate fecha,
-                                LocalTime hora,
-                                String motivoConsulta) {
-
-        return turnoService.registrarTurno(
-                idPaciente,
-                idOdontologo,
-                idSecretaria,
-                fecha,
-                hora,
-                motivoConsulta
-        );
+    public Turno registrarTurno(TurnoRegistro datos) {
+        return turnoService.registrarTurno(datos);
     }
 
     public Turno buscarTurnoPorId(Long id) {
@@ -65,23 +53,8 @@ public class TurnoController {
         return turnoService.listarPorEstado(estado);
     }
 
-    public Turno actualizarTurno(Long idTurno,
-                                 Long idOdontologo,
-                                 Long idSecretaria,
-                                 LocalDate fecha,
-                                 LocalTime hora,
-                                 String motivoConsulta,
-                                 EstadoTurno estado) {
-
-        return turnoService.modificarTurno(
-                idTurno,
-                idOdontologo,
-                idSecretaria,
-                fecha,
-                hora,
-                motivoConsulta,
-                estado
-        );
+    public Turno actualizarTurno(TurnoEdicion datos) {
+        return turnoService.modificarTurno(datos);
     }
 
     public Turno cambiarEstadoTurno(Long idTurno, EstadoTurno nuevoEstado) {

@@ -44,7 +44,7 @@ public class TurnoRepository implements IRepository<Turno> {
 
     public boolean existeConflictoHorario(Long idOdontologo, LocalDate fecha, LocalTime hora) {
         for (Turno turno : turnos.values()) {
-            if (turno.getOdontologo().getId().equals(idOdontologo)
+            if (turno.getIdOdontologo().equals(idOdontologo)
                     && turno.getFecha().equals(fecha)
                     && turno.getHora().equals(hora)) {
                 return true;
@@ -56,7 +56,7 @@ public class TurnoRepository implements IRepository<Turno> {
     public boolean existeConflictoHorarioExcluyendoTurno(Long idTurno, Long idOdontologo, LocalDate fecha, LocalTime hora) {
         for (Turno turno : turnos.values()) {
             if (!turno.getId().equals(idTurno)
-                    && turno.getOdontologo().getId().equals(idOdontologo)
+                    && turno.getIdOdontologo().equals(idOdontologo)
                     && turno.getFecha().equals(fecha)
                     && turno.getHora().equals(hora)) {
                 return true;

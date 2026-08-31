@@ -22,16 +22,13 @@ public class OdontologoGeneral extends Odontologo {
 
     @Override
     public boolean puedeAtender(String motivo) {
-        if (motivo == null || motivo.trim().isEmpty()) {
-            return false;
-        }
-
-        String motivoConsulta = motivo.toLowerCase();
-
-        return motivoConsulta.contains("consulta")
-                || motivoConsulta.contains("control")
-                || motivoConsulta.contains("limpieza")
-                || motivoConsulta.contains("caries")
-                || motivoConsulta.contains("dolor");
+        return motivoContieneAlgunaPalabra(
+                motivo,
+                "consulta",
+                "control",
+                "limpieza",
+                "caries",
+                "dolor"
+        );
     }
 }

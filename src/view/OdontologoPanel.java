@@ -38,7 +38,7 @@ public class OdontologoPanel extends JPanel {
         String[] columnas = {"ID", "Nombre", "Apellido", "DNI", "Matrícula", "Especialidad", "Tarifa"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int r, int c) { return false; }
+            public boolean isCellEditable(int fila, int columna) { return false; }
         };
         tabla = new JTable(modeloTabla);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -113,15 +113,15 @@ public class OdontologoPanel extends JPanel {
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
         try {
-            for (Odontologo o : controller.listarOdontologos()) {
+            for (Odontologo odontologo : controller.listarOdontologos()) {
                 modeloTabla.addRow(new Object[]{
-                        o.getId(),
-                        o.getNombre(),
-                        o.getApellido(),
-                        o.getDni(),
-                        o.getMatricula(),
-                        o.getEspecialidad(),
-                        String.format("$%.0f", o.getTarifaBase())
+                        odontologo.getId(),
+                        odontologo.getNombre(),
+                        odontologo.getApellido(),
+                        odontologo.getDni(),
+                        odontologo.getMatricula(),
+                        odontologo.getEspecialidad(),
+                        String.format("$%.0f", odontologo.getTarifaBase())
                 });
             }
         } catch (ClinicaException e) {
@@ -134,12 +134,12 @@ public class OdontologoPanel extends JPanel {
         if (fila < 0) return;
         idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
         try {
-            Odontologo o = controller.buscarOdontologoPorId(idSeleccionado);
-            txtNombre.setText(o.getNombre());
-            txtApellido.setText(o.getApellido());
-            txtDni.setText(String.valueOf(o.getDni()));
-            txtMatricula.setText(o.getMatricula());
-            switch (o.getEspecialidad()) {
+            Odontologo odontologo = controller.buscarOdontologoPorId(idSeleccionado);
+            txtNombre.setText(odontologo.getNombre());
+            txtApellido.setText(odontologo.getApellido());
+            txtDni.setText(String.valueOf(odontologo.getDni()));
+            txtMatricula.setText(odontologo.getMatricula());
+            switch (odontologo.getEspecialidad()) {
                 case "Ortodoncia":  cboEspecialidad.setSelectedIndex(1); break;
                 case "Endodoncia":  cboEspecialidad.setSelectedIndex(2); break;
                 default:            cboEspecialidad.setSelectedIndex(0); break;
@@ -183,9 +183,9 @@ public class OdontologoPanel extends JPanel {
             mostrarError("Seleccione un odontólogo de la tabla.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar el odontólogo seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 controller.eliminarOdontologo(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Odontólogo eliminado correctamente.");
@@ -204,9 +204,9 @@ public class OdontologoPanel extends JPanel {
             return;
         }
         try {
-            Odontologo o = controller.buscarOdontologoPorMatricula(matricula);
+            Odontologo odontologo = controller.buscarOdontologoPorMatricula(matricula);
             for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                if (modeloTabla.getValueAt(i, 4).toString().equalsIgnoreCase(o.getMatricula())) {
+                if (modeloTabla.getValueAt(i, 4).toString().equalsIgnoreCase(odontologo.getMatricula())) {
                     tabla.setRowSelectionInterval(i, i);
                     tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
                     break;
@@ -229,7 +229,7 @@ public class OdontologoPanel extends JPanel {
         tabla.clearSelection();
     }
 
-    private void mostrarError(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

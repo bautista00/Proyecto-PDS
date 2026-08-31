@@ -34,7 +34,7 @@ public class SecretariaPanel extends JPanel {
         String[] columnas = {"ID", "Nombre", "Apellido", "DNI"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int r, int c) { return false; }
+            public boolean isCellEditable(int fila, int columna) { return false; }
         };
         tabla = new JTable(modeloTabla);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -101,8 +101,8 @@ public class SecretariaPanel extends JPanel {
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
         try {
-            for (Secretaria s : controller.listarSecretarias()) {
-                modeloTabla.addRow(new Object[]{s.getId(), s.getNombre(), s.getApellido(), s.getDni()});
+            for (Secretaria secretaria : controller.listarSecretarias()) {
+                modeloTabla.addRow(new Object[]{secretaria.getId(), secretaria.getNombre(), secretaria.getApellido(), secretaria.getDni()});
             }
         } catch (ClinicaException e) {
             mostrarError(e.getMessage());
@@ -114,10 +114,10 @@ public class SecretariaPanel extends JPanel {
         if (fila < 0) return;
         idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
         try {
-            Secretaria s = controller.buscarSecretariaPorId(idSeleccionado);
-            txtNombre.setText(s.getNombre());
-            txtApellido.setText(s.getApellido());
-            txtDni.setText(String.valueOf(s.getDni()));
+            Secretaria secretaria = controller.buscarSecretariaPorId(idSeleccionado);
+            txtNombre.setText(secretaria.getNombre());
+            txtApellido.setText(secretaria.getApellido());
+            txtDni.setText(String.valueOf(secretaria.getDni()));
         } catch (ClinicaException e) {
             mostrarError(e.getMessage());
         }
@@ -150,9 +150,9 @@ public class SecretariaPanel extends JPanel {
             mostrarError("Seleccione una secretaria de la tabla.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar la secretaria seleccionada?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 controller.eliminarSecretaria(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Secretaria eliminada correctamente.");
@@ -172,9 +172,9 @@ public class SecretariaPanel extends JPanel {
         }
         try {
             Integer dni = Integer.parseInt(texto);
-            Secretaria s = controller.buscarSecretariaPorDni(dni);
+            Secretaria secretaria = controller.buscarSecretariaPorDni(dni);
             for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                if (modeloTabla.getValueAt(i, 3).equals(s.getDni())) {
+                if (modeloTabla.getValueAt(i, 3).equals(secretaria.getDni())) {
                     tabla.setRowSelectionInterval(i, i);
                     tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
                     break;
@@ -197,7 +197,7 @@ public class SecretariaPanel extends JPanel {
         tabla.clearSelection();
     }
 
-    private void mostrarError(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

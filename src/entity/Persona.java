@@ -42,6 +42,10 @@ public abstract class Persona implements Serializable {
         return dni;
     }
 
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
     public void setDni(Integer dni) {
         this.dni = dni;
     }

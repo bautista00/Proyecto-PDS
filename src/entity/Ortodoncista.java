@@ -22,16 +22,13 @@ public class Ortodoncista extends Odontologo {
 
     @Override
     public boolean puedeAtender(String motivo) {
-        if (motivo == null || motivo.trim().isEmpty()) {
-            return false;
-        }
-
-        String motivoNormalizado = motivo.toLowerCase();
-
-        return motivoNormalizado.contains("ortodoncia")
-                || motivoNormalizado.contains("brackets")
-                || motivoNormalizado.contains("alineadores")
-                || motivoNormalizado.contains("mordida")
-                || motivoNormalizado.contains("apiñamiento");
+        return motivoContieneAlgunaPalabra(
+                motivo,
+                "ortodoncia",
+                "brackets",
+                "alineadores",
+                "mordida",
+                "apiñamiento"
+        );
     }
 }

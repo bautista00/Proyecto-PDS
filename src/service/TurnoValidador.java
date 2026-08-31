@@ -19,43 +19,34 @@ import java.time.LocalTime;
 
 public class TurnoValidador {
 
-    public void validarTurnoNuevo(Turno turno,
-                                  PacienteRepository pacienteRepository,
-                                  OdontologoRepository odontologoRepository,
-                                  SecretariaRepository secretariaRepository) {
-        if (turno == null) {
-            throw new DatoInvalidoException("El turno no puede ser nulo.");
-        }
+    private final TurnoRepository turnoRepository;
+    private final PacienteRepository pacienteRepository;
+    private final OdontologoRepository odontologoRepository;
+    private final SecretariaRepository secretariaRepository;
 
-        if (turno.getPaciente() == null) {
-            throw new DatoInvalidoException("El paciente del turno no existe.");
-        }
-        if (turno.getOdontologo() == null) {
-            throw new DatoInvalidoException("El odontologo del turno no existe.");
-        }
-        if (turno.getSecretaria() == null) {
-            throw new DatoInvalidoException("La secretaria del turno no existe.");
-        }
-
-        obtenerPacienteExistente(turno.getPaciente().getId(), pacienteRepository);
-        obtenerOdontologoExistente(turno.getOdontologo().getId(), odontologoRepository);
-        obtenerSecretariaExistente(turno.getSecretaria().getId(), secretariaRepository);
-        validarFechaHora(turno.getFecha(), turno.getHora());
-        validarMotivoConsulta(turno.getMotivoConsulta());
-
-        if (!turno.getOdontologo().puedeAtender(turno.getMotivoConsulta())) {
-            throw new DatoInvalidoException("El odontologo seleccionado no puede atender ese motivo de consulta.");
-        }
+    public TurnoValidador(TurnoRepository turnoRepository,
+                          PacienteRepository pacienteRepository,
+                          OdontologoRepository odontologoRepository,
+                          SecretariaRepository secretariaRepository) {
+        this.turnoRepository = turnoRepository;
+        this.pacienteRepository = pacienteRepository;
+        this.odontologoRepository = odontologoRepository;
+        this.secretariaRepository = secretariaRepository;
     }
 
-    public void validarTurnoActualizacion(Turno turno,
-                                          PacienteRepository pacienteRepository,
-                                          OdontologoRepository odontologoRepository,
-                                          SecretariaRepository secretariaRepository) {
+    public void validarTurnoNuevo(Turno turno) {
+        validarDatosComunesTurno(turno);
+    }
+
+    public void validarTurnoActualizacion(Turno turno) {
+        validarDatosComunesTurno(turno);
+        validarEstadoTurno(turno.getEstado());
+    }
+
+    private void validarDatosComunesTurno(Turno turno) {
         if (turno == null) {
             throw new DatoInvalidoException("El turno no puede ser nulo.");
         }
-
         if (turno.getPaciente() == null) {
             throw new DatoInvalidoException("El paciente del turno no existe.");
         }
@@ -66,16 +57,12 @@ public class TurnoValidador {
             throw new DatoInvalidoException("La secretaria del turno no existe.");
         }
 
-        obtenerPacienteExistente(turno.getPaciente().getId(), pacienteRepository);
-        obtenerOdontologoExistente(turno.getOdontologo().getId(), odontologoRepository);
-        obtenerSecretariaExistente(turno.getSecretaria().getId(), secretariaRepository);
+        obtenerPacienteExistente(turno.getIdPaciente());
+        obtenerOdontologoExistente(turno.getIdOdontologo());
+        obtenerSecretariaExistente(turno.getIdSecretaria());
         validarFechaHora(turno.getFecha(), turno.getHora());
         validarMotivoConsulta(turno.getMotivoConsulta());
-        validarEstadoTurno(turno.getEstado());
-
-        if (!turno.getOdontologo().puedeAtender(turno.getMotivoConsulta())) {
-            throw new DatoInvalidoException("El odontologo seleccionado no puede atender ese motivo de consulta.");
-        }
+        validarPuedeAtender(turno.getOdontologo(), turno.getMotivoConsulta());
     }
 
     public void validarFechaHora(LocalDate fecha, LocalTime hora) {
@@ -97,7 +84,13 @@ public class TurnoValidador {
         }
     }
 
-    public Paciente obtenerPacienteExistente(Long idPaciente, PacienteRepository pacienteRepository) {
+    public void validarPuedeAtender(Odontologo odontologo, String motivoConsulta) {
+        if (!odontologo.puedeAtender(motivoConsulta)) {
+            throw new DatoInvalidoException("El odontologo seleccionado no puede atender ese motivo de consulta.");
+        }
+    }
+
+    public Paciente obtenerPacienteExistente(Long idPaciente) {
         ValidacionesClinica.validarIdPacientePositivo(idPaciente);
         Paciente paciente = pacienteRepository.buscarPorId(idPaciente);
         if (paciente == null) {
@@ -106,7 +99,7 @@ public class TurnoValidador {
         return paciente;
     }
 
-    public Odontologo obtenerOdontologoExistente(Long idOdontologo, OdontologoRepository odontologoRepository) {
+    public Odontologo obtenerOdontologoExistente(Long idOdontologo) {
         ValidacionesClinica.validarIdOdontologoPositivo(idOdontologo);
         Odontologo odontologo = odontologoRepository.buscarPorId(idOdontologo);
         if (odontologo == null) {
@@ -115,7 +108,7 @@ public class TurnoValidador {
         return odontologo;
     }
 
-    public Secretaria obtenerSecretariaExistente(Long idSecretaria, SecretariaRepository secretariaRepository) {
+    public Secretaria obtenerSecretariaExistente(Long idSecretaria) {
         ValidacionesClinica.validarIdSecretariaPositivo(idSecretaria);
         Secretaria secretaria = secretariaRepository.buscarPorId(idSecretaria);
         if (secretaria == null) {
@@ -124,7 +117,7 @@ public class TurnoValidador {
         return secretaria;
     }
 
-    public Turno obtenerTurnoExistente(Long idTurno, TurnoRepository turnoRepository) {
+    public Turno obtenerTurnoExistente(Long idTurno) {
         ValidacionesClinica.validarIdTurnoPositivo(idTurno);
         Turno turno = turnoRepository.buscarPorId(idTurno);
         if (turno == null) {
@@ -133,10 +126,7 @@ public class TurnoValidador {
         return turno;
     }
 
-    public void validarConflictoHorario(Long idOdontologo,
-                                        LocalDate fecha,
-                                        LocalTime hora,
-                                        TurnoRepository turnoRepository) {
+    public void validarConflictoHorario(Long idOdontologo, LocalDate fecha, LocalTime hora) {
         if (turnoRepository.existeConflictoHorario(idOdontologo, fecha, hora)) {
             throw new TurnoYaReservadoException("El odontologo ya tiene un turno reservado el "
                     + fecha + " a las " + hora + ".");
@@ -146,8 +136,7 @@ public class TurnoValidador {
     public void validarConflictoHorarioExcluyendoTurno(Long idTurno,
                                                        Long idOdontologo,
                                                        LocalDate fecha,
-                                                       LocalTime hora,
-                                                       TurnoRepository turnoRepository) {
+                                                       LocalTime hora) {
         if (turnoRepository.existeConflictoHorarioExcluyendoTurno(idTurno, idOdontologo, fecha, hora)) {
             throw new TurnoYaReservadoException("El odontologo ya tiene otro turno reservado el "
                     + fecha + " a las " + hora + ".");

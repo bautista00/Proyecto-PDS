@@ -49,6 +49,22 @@ public class Paciente extends Persona implements Comparable<Paciente> {
         return domicilio;
     }
 
+    public String getCalleDomicilio() {
+        return domicilio.getCalle();
+    }
+
+    public Integer getNumeroDomicilio() {
+        return domicilio.getNumero();
+    }
+
+    public String getLocalidadDomicilio() {
+        return domicilio.getLocalidad();
+    }
+
+    public String getProvinciaDomicilio() {
+        return domicilio.getProvincia();
+    }
+
     public void setDomicilio(Domicilio domicilio) {
         this.domicilio = domicilio;
     }

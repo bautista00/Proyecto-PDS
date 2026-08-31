@@ -22,16 +22,13 @@ public class Endodoncista extends Odontologo {
 
     @Override
     public boolean puedeAtender(String motivo) {
-        if (motivo == null || motivo.trim().isEmpty()) {
-            return false;
-        }
-
-        String motivoConsulta = motivo.toLowerCase();
-
-        return motivoConsulta.contains("endodoncia")
-                || motivoConsulta.contains("conducto")
-                || motivoConsulta.contains("pulpa")
-                || motivoConsulta.contains("infeccion")
-                || motivoConsulta.contains("dolor intenso");
+        return motivoContieneAlgunaPalabra(
+                motivo,
+                "endodoncia",
+                "conducto",
+                "pulpa",
+                "infeccion",
+                "dolor intenso"
+        );
     }
 }

@@ -18,8 +18,8 @@ public class TurnoHistorialUtil {
         }
 
         LocalDate hoy = LocalDate.now();
-        return turnos.stream().anyMatch(t ->
-                !t.getFecha().isBefore(hoy)
-                        && (t.getEstado() == EstadoTurno.PENDIENTE || t.getEstado() == EstadoTurno.CONFIRMADO));
+        return turnos.stream().anyMatch(turno ->
+                !turno.getFecha().isBefore(hoy)
+                        && (turno.getEstado() == EstadoTurno.PENDIENTE || turno.getEstado() == EstadoTurno.CONFIRMADO));
     }
 }

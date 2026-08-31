@@ -47,8 +47,28 @@ public class Turno implements Serializable {
         return paciente;
     }
 
+    public Long getIdPaciente() {
+        return paciente.getId();
+    }
+
+    public String getNombrePaciente() {
+        return paciente.getNombreCompleto();
+    }
+
     public Odontologo getOdontologo() {
         return odontologo;
+    }
+
+    public Long getIdOdontologo() {
+        return odontologo.getId();
+    }
+
+    public String getNombreOdontologo() {
+        return odontologo.getNombreCompleto();
+    }
+
+    public String getEspecialidadOdontologo() {
+        return odontologo.getEspecialidad();
     }
 
     public void setOdontologo(Odontologo odontologo) {
@@ -59,8 +79,44 @@ public class Turno implements Serializable {
         return secretaria;
     }
 
+    public Long getIdSecretaria() {
+        return secretaria.getId();
+    }
+
+    public String getNombreSecretaria() {
+        return secretaria.getNombreCompleto();
+    }
+
     public void setSecretaria(Secretaria secretaria) {
         this.secretaria = secretaria;
+    }
+
+    public void vincularConActores() {
+        paciente.agregarTurno(this);
+        odontologo.agregarTurno(this);
+        secretaria.agregarTurno(this);
+    }
+
+    public void desvincularDeActores() {
+        paciente.removerTurno(this);
+        odontologo.removerTurno(this);
+        secretaria.removerTurno(this);
+    }
+
+    public void cambiarOdontologo(Odontologo nuevoOdontologo) {
+        if (!odontologo.getId().equals(nuevoOdontologo.getId())) {
+            odontologo.removerTurno(this);
+            nuevoOdontologo.agregarTurno(this);
+        }
+        this.odontologo = nuevoOdontologo;
+    }
+
+    public void cambiarSecretaria(Secretaria nuevaSecretaria) {
+        if (!secretaria.getId().equals(nuevaSecretaria.getId())) {
+            secretaria.removerTurno(this);
+            nuevaSecretaria.agregarTurno(this);
+        }
+        this.secretaria = nuevaSecretaria;
     }
 
     public LocalDate getFecha() {
@@ -96,8 +152,8 @@ public class Turno implements Serializable {
     }
 
     public String generarMensajeRecordatorio() {
-        return "Recordatorio de turno: Paciente " + paciente.getNombre() + " " + paciente.getApellido() +
-                ", Odontologo " + odontologo.getNombre() + " " + odontologo.getApellido() +
+        return "Recordatorio de turno: Paciente " + getNombrePaciente() +
+                ", Odontologo " + getNombreOdontologo() +
                 ", fecha " + fecha +
                 ", hora " + hora +
                 ", motivo " + motivoConsulta + ".";
@@ -107,9 +163,9 @@ public class Turno implements Serializable {
     public String toString() {
         return "\n=== Informacion del Turno ===" +
                 "\nID: " + id +
-                "\nPaciente: " + paciente.getNombre() + " " + paciente.getApellido() +
-                "\nOdontologo: " + odontologo.getNombre() + " " + odontologo.getApellido() +
-                "\nSecretaria: " + secretaria.getNombre() + " " + secretaria.getApellido() +
+                "\nPaciente: " + getNombrePaciente() +
+                "\nOdontologo: " + getNombreOdontologo() +
+                "\nSecretaria: " + getNombreSecretaria() +
                 "\nFecha: " + fecha +
                 "\nHora: " + hora +
                 "\nMotivo: " + motivoConsulta +

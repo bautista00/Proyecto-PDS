@@ -1,14 +1,6 @@
 package view;
 
-import controller.OdontologoController;
-import controller.PacienteController;
-import controller.SecretariaController;
-import controller.TurnoController;
-import persistence.PersistenciaServicio;
-import repository.OdontologoRepository;
-import repository.PacienteRepository;
-import repository.SecretariaRepository;
-import repository.TurnoRepository;
+import config.DependenciasClinica;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -16,55 +8,54 @@ import java.awt.event.WindowEvent;
 
 public class MainFrame extends JFrame {
 
-    private final PersistenciaServicio persistencia;
-    private final PacienteRepository   pacienteRepository;
-    private final OdontologoRepository odontologoRepository;
-    private final SecretariaRepository secretariaRepository;
-    private final TurnoRepository      turnoRepository;
-
+    private final DependenciasClinica dependencias;
     private final TurnoPanel panelTurnos;
 
-    public MainFrame(PersistenciaServicio persistencia,
-                     PacienteController pacienteController,
-                     OdontologoController odontologoController,
-                     SecretariaController secretariaController,
-                     TurnoController turnoController,
-                     PacienteRepository pacienteRepository,
-                     OdontologoRepository odontologoRepository,
-                     SecretariaRepository secretariaRepository,
-                     TurnoRepository turnoRepository) {
+    public MainFrame(DependenciasClinica dependencias) {
+        this.dependencias = dependencias;
 
-        this.persistencia          = persistencia;
-        this.pacienteRepository    = pacienteRepository;
-        this.odontologoRepository  = odontologoRepository;
-        this.secretariaRepository  = secretariaRepository;
-        this.turnoRepository       = turnoRepository;
+        PacientePanel panelPacientes = new PacientePanel(dependencias.getPacienteController());
+        OdontologoPanel panelOdontologos = new OdontologoPanel(dependencias.getOdontologoController());
+        SecretariaPanel panelSecretarias = new SecretariaPanel(dependencias.getSecretariaController());
+        this.panelTurnos = new TurnoPanel(
+                dependencias.getTurnoController(),
+                dependencias.getPacienteController(),
+                dependencias.getOdontologoController(),
+                dependencias.getSecretariaController());
 
-        PacientePanel   panelPacientes   = new PacientePanel(pacienteController);
-        OdontologoPanel panelOdontologos = new OdontologoPanel(odontologoController);
-        SecretariaPanel panelSecretarias = new SecretariaPanel(secretariaController);
-        this.panelTurnos = new TurnoPanel(turnoController, pacienteController, odontologoController, secretariaController);
+        configurarVentana(panelPacientes, panelOdontologos, panelSecretarias);
+    }
 
+    private void configurarVentana(PacientePanel panelPacientes,
+                                    OdontologoPanel panelOdontologos,
+                                    SecretariaPanel panelSecretarias) {
         setTitle("Clínica Odontológica");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(950, 680);
         setLocationRelativeTo(null);
 
+        add(crearPestanas(panelPacientes, panelOdontologos, panelSecretarias));
+        configurarGuardadoAlCerrar();
+    }
+
+    private JTabbedPane crearPestanas(PacientePanel panelPacientes,
+                                      OdontologoPanel panelOdontologos,
+                                      SecretariaPanel panelSecretarias) {
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Pacientes",   panelPacientes);
+        tabs.addTab("Pacientes", panelPacientes);
         tabs.addTab("Odontólogos", panelOdontologos);
         tabs.addTab("Secretarias", panelSecretarias);
-        tabs.addTab("Turnos",      panelTurnos);
+        tabs.addTab("Turnos", panelTurnos);
 
-        // Actualizar combos de turnos al cambiar de pestaña
         tabs.addChangeListener(e -> {
             if (tabs.getSelectedComponent() == panelTurnos) {
                 panelTurnos.actualizarCombos();
             }
         });
+        return tabs;
+    }
 
-        add(tabs);
-
+    private void configurarGuardadoAlCerrar() {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -75,8 +66,7 @@ public class MainFrame extends JFrame {
                         JOptionPane.YES_NO_CANCEL_OPTION
                 );
                 if (opcion == JOptionPane.YES_OPTION) {
-                    persistencia.guardar(pacienteRepository, odontologoRepository,
-                            secretariaRepository, turnoRepository);
+                    dependencias.guardarDatos();
                     dispose();
                 } else if (opcion == JOptionPane.NO_OPTION) {
                     dispose();

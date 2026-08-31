@@ -1,37 +1,35 @@
 package controller;
 
+import dto.PacienteEdicion;
+import dto.PacienteRegistro;
 import entity.Domicilio;
 import entity.Paciente;
+import exception.DatoInvalidoException;
 import service.PacienteServiceImpl;
 
 import java.util.List;
 
 public class PacienteController {
 
-    private PacienteServiceImpl pacienteService;
+    private final PacienteServiceImpl pacienteService;
 
     public PacienteController(PacienteServiceImpl pacienteService) {
         this.pacienteService = pacienteService;
     }
 
-    public Paciente registrarPaciente(String nombre,
-                                      String apellido,
-                                      Integer dni,
-                                      String email,
-                                      String calle,
-                                      Integer numero,
-                                      String localidad,
-                                      String provincia,
-                                      Boolean obraSocial) {
-
-        Domicilio domicilio = new Domicilio(calle, numero, localidad, provincia);
-        Paciente paciente = new Paciente(nombre, apellido, dni, email, domicilio, obraSocial);
-
+    public Paciente registrarPaciente(PacienteRegistro datos) {
+        validarDatosPaciente(datos);
+        Paciente paciente = crearPaciente(datos);
         return pacienteService.registrar(paciente);
     }
 
     public Paciente buscarPacientePorId(Long id) {
         return pacienteService.buscarPorId(id);
+    }
+
+    public PacienteRegistro buscarDatosPacientePorId(Long id) {
+        Paciente paciente = pacienteService.buscarPorId(id);
+        return crearDatosPaciente(paciente);
     }
 
     public Paciente buscarPacientePorDni(Integer dni) {
@@ -46,25 +44,20 @@ public class PacienteController {
         return pacienteService.listarOrdenadosPorApellido();
     }
 
-    public Paciente actualizarPaciente(Long id,
-                                       String nombre,
-                                       String apellido,
-                                       Integer dni,
-                                       String email,
-                                       String calle,
-                                       Integer numero,
-                                       String localidad,
-                                       String provincia,
-                                       Boolean obraSocial) {
+    public Paciente actualizarPaciente(PacienteEdicion edicion) {
+        if (edicion == null) {
+            throw new DatoInvalidoException("Los datos de edicion del paciente no pueden ser nulos.");
+        }
+        PacienteRegistro datos = edicion.getDatos();
+        validarDatosPaciente(datos);
+        Paciente pacienteExistente = pacienteService.buscarPorId(edicion.getIdPaciente());
 
-        Paciente pacienteExistente = pacienteService.buscarPorId(id);
-
-        pacienteExistente.setNombre(nombre);
-        pacienteExistente.setApellido(apellido);
-        pacienteExistente.setDni(dni);
-        pacienteExistente.setEmail(email);
-        pacienteExistente.setDomicilio(new Domicilio(calle, numero, localidad, provincia));
-        pacienteExistente.setObraSocial(obraSocial);
+        pacienteExistente.setNombre(datos.getNombre());
+        pacienteExistente.setApellido(datos.getApellido());
+        pacienteExistente.setDni(datos.getDni());
+        pacienteExistente.setEmail(datos.getEmail());
+        pacienteExistente.setDomicilio(crearDomicilio(datos));
+        pacienteExistente.setObraSocial(datos.getObraSocial());
 
         return pacienteService.actualizar(pacienteExistente);
     }
@@ -72,4 +65,42 @@ public class PacienteController {
     public boolean eliminarPaciente(Long id) {
         return pacienteService.eliminar(id);
     }
+
+    private Paciente crearPaciente(PacienteRegistro datos) {
+        return new Paciente(
+                datos.getNombre(),
+                datos.getApellido(),
+                datos.getDni(),
+                datos.getEmail(),
+                crearDomicilio(datos),
+                datos.getObraSocial());
+    }
+
+    private Domicilio crearDomicilio(PacienteRegistro datos) {
+        return new Domicilio(
+                datos.getCalle(),
+                datos.getNumero(),
+                datos.getLocalidad(),
+                datos.getProvincia());
+    }
+
+    private PacienteRegistro crearDatosPaciente(Paciente paciente) {
+        PacienteRegistro datos = new PacienteRegistro();
+        datos.setNombre(paciente.getNombre());
+        datos.setApellido(paciente.getApellido());
+        datos.setDni(paciente.getDni());
+        datos.setEmail(paciente.getEmail());
+        datos.setCalle(paciente.getCalleDomicilio());
+        datos.setNumero(paciente.getNumeroDomicilio());
+        datos.setLocalidad(paciente.getLocalidadDomicilio());
+        datos.setProvincia(paciente.getProvinciaDomicilio());
+        datos.setObraSocial(paciente.getObraSocial());
+        return datos;
+    }
+    private void validarDatosPaciente(PacienteRegistro datos) {
+        if (datos == null) {
+            throw new DatoInvalidoException("Los datos del paciente no pueden ser nulos.");
+        }
+    }
+
 }

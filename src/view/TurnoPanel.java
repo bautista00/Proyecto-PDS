@@ -4,6 +4,8 @@ import controller.OdontologoController;
 import controller.PacienteController;
 import controller.SecretariaController;
 import controller.TurnoController;
+import dto.TurnoEdicion;
+import dto.TurnoRegistro;
 import entity.EstadoTurno;
 import entity.Odontologo;
 import entity.Paciente;
@@ -71,19 +73,19 @@ public class TurnoPanel extends JPanel {
         catch (ClinicaException ignored) { listaSecretarias = new ArrayList<>(); }
 
         cboPaciente.removeAllItems();
-        for (Paciente p : listaPacientes) {
-            cboPaciente.addItem(p.getId() + " - " + p.getNombre() + " " + p.getApellido());
+        for (Paciente paciente : listaPacientes) {
+            cboPaciente.addItem(paciente.getId() + " - " + paciente.getNombreCompleto());
         }
 
         cboOdontologo.removeAllItems();
-        for (Odontologo o : listaOdontologos) {
-            cboOdontologo.addItem(o.getId() + " - " + o.getNombre() + " " + o.getApellido()
-                    + " (" + o.getEspecialidad() + ")");
+        for (Odontologo odontologo : listaOdontologos) {
+            cboOdontologo.addItem(odontologo.getId() + " - " + odontologo.getNombreCompleto()
+                    + " (" + odontologo.getEspecialidad() + ")");
         }
 
         cboSecretaria.removeAllItems();
-        for (Secretaria s : listaSecretarias) {
-            cboSecretaria.addItem(s.getId() + " - " + s.getNombre() + " " + s.getApellido());
+        for (Secretaria secretaria : listaSecretarias) {
+            cboSecretaria.addItem(secretaria.getId() + " - " + secretaria.getNombreCompleto());
         }
     }
 
@@ -91,7 +93,7 @@ public class TurnoPanel extends JPanel {
         String[] columnas = {"ID", "Paciente", "Odontólogo", "Especialidad", "Secretaria", "Fecha", "Hora", "Motivo", "Estado"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int r, int c) { return false; }
+            public boolean isCellEditable(int fila, int columna) { return false; }
         };
         tabla = new JTable(modeloTabla);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -193,11 +195,11 @@ public class TurnoPanel extends JPanel {
         JButton btnMonto = new JButton("Calcular Monto");
         JButton btnLimpiar = new JButton("Limpiar");
 
-        btnNuevo.addActionListener(e -> onNuevoAction());
-        btnGuardar.addActionListener(e -> onGuardarAction());
-        btnEliminar.addActionListener(e -> onEliminarAction());
-        btnMonto.addActionListener(e -> onCalcularMontoAction());
-        btnLimpiar.addActionListener(e -> onLimpiarAction());
+        btnNuevo.addActionListener(e -> limpiarFormulario());
+        btnGuardar.addActionListener(e -> guardar());
+        btnEliminar.addActionListener(e -> eliminar());
+        btnMonto.addActionListener(e -> calcularMonto());
+        btnLimpiar.addActionListener(e -> limpiarFormulario());
 
         fila.add(btnNuevo);
         fila.add(btnGuardar);
@@ -217,12 +219,12 @@ public class TurnoPanel extends JPanel {
         JButton btnPorFechas = new JButton("Filtrar por Fechas");
         JButton btnPorEstado = new JButton("Filtrar por Estado");
 
-        btnVerTodos.addActionListener(e -> onVerTodosAction());
-        btnPorPaciente.addActionListener(e -> onFiltrarPorPacienteAction());
-        btnPorOdontologo.addActionListener(e -> onFiltrarPorOdontologoAction());
-        btnPorSecretaria.addActionListener(e -> onFiltrarPorSecretariaAction());
-        btnPorFechas.addActionListener(e -> onFiltrarPorFechasAction());
-        btnPorEstado.addActionListener(e -> onFiltrarPorEstadoAction());
+        btnVerTodos.addActionListener(e -> cargarTabla(turnoController.listarTurnos()));
+        btnPorPaciente.addActionListener(e -> filtrarPorPaciente());
+        btnPorOdontologo.addActionListener(e -> filtrarPorOdontologo());
+        btnPorSecretaria.addActionListener(e -> filtrarPorSecretaria());
+        btnPorFechas.addActionListener(e -> filtrarPorFechas());
+        btnPorEstado.addActionListener(e -> filtrarPorEstado());
 
         fila.add(btnVerTodos);
         fila.add(btnPorPaciente);
@@ -235,17 +237,17 @@ public class TurnoPanel extends JPanel {
 
     private void cargarTabla(List<Turno> turnos) {
         modeloTabla.setRowCount(0);
-        for (Turno t : turnos) {
+        for (Turno turno : turnos) {
             modeloTabla.addRow(new Object[]{
-                    t.getId(),
-                    t.getPaciente().getNombre() + " " + t.getPaciente().getApellido(),
-                    t.getOdontologo().getNombre() + " " + t.getOdontologo().getApellido(),
-                    t.getOdontologo().getEspecialidad(),
-                    t.getSecretaria().getNombre() + " " + t.getSecretaria().getApellido(),
-                    t.getFecha().toString(),
-                    t.getHora().toString(),
-                    t.getMotivoConsulta(),
-                    t.getEstado().toString()
+                    turno.getId(),
+                    turno.getNombrePaciente(),
+                    turno.getNombreOdontologo(),
+                    turno.getEspecialidadOdontologo(),
+                    turno.getNombreSecretaria(),
+                    turno.getFecha().toString(),
+                    turno.getHora().toString(),
+                    turno.getMotivoConsulta(),
+                    turno.getEstado().toString()
             });
         }
     }
@@ -255,62 +257,18 @@ public class TurnoPanel extends JPanel {
         if (fila < 0) return;
         idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
         try {
-            Turno t = turnoController.buscarTurnoPorId(idSeleccionado);
-            seleccionarEnCombo(cboPaciente,   listaPacientes,   t.getPaciente().getId());
-            seleccionarEnCombo(cboOdontologo, listaOdontologos, t.getOdontologo().getId());
-            seleccionarEnCombo(cboSecretaria, listaSecretarias, t.getSecretaria().getId());
-            txtFecha.setText(t.getFecha().toString());
-            txtHora.setText(t.getHora().toString());
-            txtMotivo.setText(t.getMotivoConsulta());
-            cboEstado.setSelectedItem(t.getEstado().toString());
+            Turno turno = turnoController.buscarTurnoPorId(idSeleccionado);
+            seleccionarEnCombo(cboPaciente, listaPacientes, turno.getIdPaciente());
+            seleccionarEnCombo(cboOdontologo, listaOdontologos, turno.getIdOdontologo());
+            seleccionarEnCombo(cboSecretaria, listaSecretarias, turno.getIdSecretaria());
+            txtFecha.setText(turno.getFecha().toString());
+            txtHora.setText(turno.getHora().toString());
+            txtMotivo.setText(turno.getMotivoConsulta());
+            cboEstado.setSelectedItem(turno.getEstado().toString());
             cboPaciente.setEnabled(false); // paciente no se puede cambiar al editar
         } catch (ClinicaException e) {
             mostrarError(e.getMessage());
         }
-    }
-
-    private void onNuevoAction() {
-        limpiarFormulario();
-    }
-
-    private void onGuardarAction() {
-        guardar();
-    }
-
-    private void onEliminarAction() {
-        eliminar();
-    }
-
-    private void onCalcularMontoAction() {
-        calcularMonto();
-    }
-
-    private void onLimpiarAction() {
-        limpiarFormulario();
-    }
-
-    private void onVerTodosAction() {
-        cargarTabla(turnoController.listarTurnos());
-    }
-
-    private void onFiltrarPorPacienteAction() {
-        filtrarPorPaciente();
-    }
-
-    private void onFiltrarPorOdontologoAction() {
-        filtrarPorOdontologo();
-    }
-
-    private void onFiltrarPorSecretariaAction() {
-        filtrarPorSecretaria();
-    }
-
-    private void onFiltrarPorFechasAction() {
-        filtrarPorFechas();
-    }
-
-    private void onFiltrarPorEstadoAction() {
-        filtrarPorEstado();
     }
 
     private void seleccionarEnCombo(JComboBox<String> combo, List<?> lista, Long id) {
@@ -328,32 +286,18 @@ public class TurnoPanel extends JPanel {
             return;
         }
         try {
-            int idxPaciente   = cboPaciente.getSelectedIndex();
-            int idxOdontologo = cboOdontologo.getSelectedIndex();
-            int idxSecretaria = cboSecretaria.getSelectedIndex();
-
-            if (idxPaciente < 0 || idxOdontologo < 0 || idxSecretaria < 0) {
-                mostrarError("Seleccione paciente, odontólogo y secretaria.");
-                return;
-            }
-
-            Long idPaciente   = listaPacientes.get(idxPaciente).getId();
-            Long idOdontologo = listaOdontologos.get(idxOdontologo).getId();
-            Long idSecretaria = listaSecretarias.get(idxSecretaria).getId();
-            LocalDate fecha   = LocalDate.parse(txtFecha.getText().trim());
-            LocalTime hora    = LocalTime.parse(txtHora.getText().trim());
-            String motivo     = txtMotivo.getText().trim();
-            EstadoTurno estado = EstadoTurno.valueOf(cboEstado.getSelectedItem().toString());
-
+            TurnoRegistro registro = leerDatosTurno();
             if (idSeleccionado == null) {
-                turnoController.registrarTurno(idPaciente, idOdontologo, idSecretaria, fecha, hora, motivo);
+                turnoController.registrarTurno(registro);
                 JOptionPane.showMessageDialog(this, "Turno registrado correctamente.");
             } else {
-                turnoController.actualizarTurno(idSeleccionado, idOdontologo, idSecretaria, fecha, hora, motivo, estado);
+                turnoController.actualizarTurno(crearEdicionTurno(registro));
                 JOptionPane.showMessageDialog(this, "Turno actualizado correctamente.");
             }
             limpiarFormulario();
             cargarTabla(turnoController.listarTurnos());
+        } catch (IllegalStateException e) {
+            mostrarError(e.getMessage());
         } catch (DateTimeParseException e) {
             mostrarError("Formato incorrecto. Fecha: yyyy-MM-dd  —  Hora: HH:mm");
         } catch (ClinicaException e) {
@@ -361,14 +305,45 @@ public class TurnoPanel extends JPanel {
         }
     }
 
+    private TurnoRegistro leerDatosTurno() {
+        int indicePaciente = cboPaciente.getSelectedIndex();
+        int indiceOdontologo = cboOdontologo.getSelectedIndex();
+        int indiceSecretaria = cboSecretaria.getSelectedIndex();
+
+        if (indicePaciente < 0 || indiceOdontologo < 0 || indiceSecretaria < 0) {
+            throw new IllegalStateException("Seleccione paciente, odontólogo y secretaria.");
+        }
+
+        TurnoRegistro datos = new TurnoRegistro();
+        datos.setIdPaciente(listaPacientes.get(indicePaciente).getId());
+        datos.setIdOdontologo(listaOdontologos.get(indiceOdontologo).getId());
+        datos.setIdSecretaria(listaSecretarias.get(indiceSecretaria).getId());
+        datos.setFecha(LocalDate.parse(txtFecha.getText().trim()));
+        datos.setHora(LocalTime.parse(txtHora.getText().trim()));
+        datos.setMotivoConsulta(txtMotivo.getText().trim());
+        return datos;
+    }
+
+    private TurnoEdicion crearEdicionTurno(TurnoRegistro registro) {
+        TurnoEdicion edicion = new TurnoEdicion();
+        edicion.setIdTurno(idSeleccionado);
+        edicion.setIdOdontologo(registro.getIdOdontologo());
+        edicion.setIdSecretaria(registro.getIdSecretaria());
+        edicion.setFecha(registro.getFecha());
+        edicion.setHora(registro.getHora());
+        edicion.setMotivoConsulta(registro.getMotivoConsulta());
+        edicion.setEstado(EstadoTurno.valueOf(cboEstado.getSelectedItem().toString()));
+        return edicion;
+    }
+
     private void eliminar() {
         if (idSeleccionado == null) {
             mostrarError("Seleccione un turno de la tabla.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar el turno seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 turnoController.eliminarTurno(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Turno eliminado correctamente.");
@@ -476,7 +451,7 @@ public class TurnoPanel extends JPanel {
         tabla.clearSelection();
     }
 
-    private void mostrarError(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

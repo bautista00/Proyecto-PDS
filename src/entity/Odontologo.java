@@ -58,6 +58,20 @@ public abstract class Odontologo extends Persona {
 
     public abstract boolean puedeAtender(String motivo);
 
+    protected boolean motivoContieneAlgunaPalabra(String motivo, String... palabrasClave) {
+        if (motivo == null || motivo.trim().isEmpty()) {
+            return false;
+        }
+
+        String motivoNormalizado = motivo.toLowerCase();
+        for (String palabraClave : palabrasClave) {
+            if (motivoNormalizado.contains(palabraClave)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "\n=== Informacion del Odontologo ===" +

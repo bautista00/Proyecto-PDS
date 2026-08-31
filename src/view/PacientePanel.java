@@ -1,6 +1,8 @@
 package view;
 
 import controller.PacienteController;
+import dto.PacienteEdicion;
+import dto.PacienteRegistro;
 import entity.Paciente;
 import exception.ClinicaException;
 
@@ -38,7 +40,7 @@ public class PacientePanel extends JPanel {
         String[] columnas = {"ID", "Nombre", "Apellido", "DNI", "Email", "Obra Social"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int row, int col) { return false; }
+            public boolean isCellEditable(int fila, int columna) { return false; }
         };
         tabla = new JTable(modeloTabla);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -55,62 +57,79 @@ public class PacientePanel extends JPanel {
     private JPanel crearPanelFormulario() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder("Datos del Paciente"));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 6, 4, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints gbc = crearRestriccionesFormulario();
 
-        txtNombre    = new JTextField(15);
-        txtApellido  = new JTextField(15);
-        txtDni       = new JTextField(10);
-        txtEmail     = new JTextField(20);
-        txtCalle     = new JTextField(15);
-        txtNumero    = new JTextField(5);
-        txtLocalidad = new JTextField(15);
-        txtProvincia = new JTextField(15);
-        cboObraSocial = new JComboBox<>(new String[]{"No", "Sí"});
-        txtBuscarDni  = new JTextField(10);
+        inicializarCamposFormulario();
 
         gbc.gridy = 0;
-        agregarFila(panel, gbc, "Nombre:", txtNombre, "Apellido:", txtApellido);
+        agregarCampo(panel, gbc, 0, "Nombre:", txtNombre);
+        agregarCampo(panel, gbc, 2, "Apellido:", txtApellido);
 
         gbc.gridy = 1;
-        agregarFila(panel, gbc, "DNI:", txtDni, "Email:", txtEmail);
+        agregarCampo(panel, gbc, 0, "DNI:", txtDni);
+        agregarCampo(panel, gbc, 2, "Email:", txtEmail);
 
         gbc.gridy = 2;
-        agregarFila(panel, gbc, "Calle:", txtCalle, "Número:", txtNumero);
+        agregarCampo(panel, gbc, 0, "Calle:", txtCalle);
+        agregarCampo(panel, gbc, 2, "Número:", txtNumero);
 
         gbc.gridy = 3;
-        agregarFila(panel, gbc, "Localidad:", txtLocalidad, "Provincia:", txtProvincia);
+        agregarCampo(panel, gbc, 0, "Localidad:", txtLocalidad);
+        agregarCampo(panel, gbc, 2, "Provincia:", txtProvincia);
 
         gbc.gridy = 4;
-        agregarFila(panel, gbc, "Obra Social:", cboObraSocial, "Buscar por DNI:", txtBuscarDni);
-
+        agregarCampo(panel, gbc, 0, "Obra Social:", cboObraSocial);
+        agregarCampo(panel, gbc, 2, "Buscar por DNI:", txtBuscarDni);
         return panel;
     }
 
-    private void agregarFila(JPanel panel, GridBagConstraints gbc,
-                              String label1, Component comp1,
-                              String label2, Component comp2) {
-        gbc.gridx = 0; gbc.weightx = 0; panel.add(new JLabel(label1), gbc);
-        gbc.gridx = 1; gbc.weightx = 1; panel.add(comp1, gbc);
-        gbc.gridx = 2; gbc.weightx = 0; panel.add(new JLabel(label2), gbc);
-        gbc.gridx = 3; gbc.weightx = 1; panel.add(comp2, gbc);
+    private GridBagConstraints crearRestriccionesFormulario() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(4, 6, 4, 6);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        return gbc;
+    }
+
+    private void inicializarCamposFormulario() {
+        txtNombre = new JTextField(15);
+        txtApellido = new JTextField(15);
+        txtDni = new JTextField(10);
+        txtEmail = new JTextField(20);
+        txtCalle = new JTextField(15);
+        txtNumero = new JTextField(5);
+        txtLocalidad = new JTextField(15);
+        txtProvincia = new JTextField(15);
+        cboObraSocial = new JComboBox<>(new String[]{"No", "Sí"});
+        txtBuscarDni = new JTextField(10);
+    }
+
+    private void agregarCampo(JPanel panel,
+                              GridBagConstraints gbc,
+                              int columna,
+                              String etiqueta,
+                              Component componente) {
+        gbc.gridx = columna;
+        gbc.weightx = 0;
+        panel.add(new JLabel(etiqueta), gbc);
+        gbc.gridx = columna + 1;
+        gbc.weightx = 1;
+        panel.add(componente, gbc);
     }
 
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
 
-        JButton btnNuevo    = new JButton("Nuevo");
-        JButton btnGuardar  = new JButton("Guardar");
+        JButton btnNuevo = new JButton("Nuevo");
+        JButton btnGuardar = new JButton("Guardar");
         JButton btnEliminar = new JButton("Eliminar");
-        JButton btnBuscar   = new JButton("Buscar DNI");
-        JButton btnLimpiar  = new JButton("Limpiar");
+        JButton btnBuscar = new JButton("Buscar DNI");
+        JButton btnLimpiar = new JButton("Limpiar");
 
-        btnNuevo.addActionListener(e    -> limpiarFormulario());
-        btnGuardar.addActionListener(e  -> guardar());
+        btnNuevo.addActionListener(e -> limpiarFormulario());
+        btnGuardar.addActionListener(e -> guardar());
         btnEliminar.addActionListener(e -> eliminar());
-        btnBuscar.addActionListener(e   -> buscarPorDni());
-        btnLimpiar.addActionListener(e  -> limpiarFormulario());
+        btnBuscar.addActionListener(e -> buscarPorDni());
+        btnLimpiar.addActionListener(e -> limpiarFormulario());
 
         panel.add(btnNuevo);
         panel.add(btnGuardar);
@@ -123,15 +142,15 @@ public class PacientePanel extends JPanel {
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
         try {
-            List<Paciente> lista = controller.listarPacientesOrdenadosPorApellido();
-            for (Paciente p : lista) {
+            List<Paciente> pacientes = controller.listarPacientesOrdenadosPorApellido();
+            for (Paciente paciente : pacientes) {
                 modeloTabla.addRow(new Object[]{
-                        p.getId(),
-                        p.getNombre(),
-                        p.getApellido(),
-                        p.getDni(),
-                        p.getEmail(),
-                        p.getObraSocial() ? "Sí" : "No"
+                        paciente.getId(),
+                        paciente.getNombre(),
+                        paciente.getApellido(),
+                        paciente.getDni(),
+                        paciente.getEmail(),
+                        paciente.getObraSocial() ? "Sí" : "No"
                 });
             }
         } catch (ClinicaException e) {
@@ -144,38 +163,33 @@ public class PacientePanel extends JPanel {
         if (fila < 0) return;
         idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
         try {
-            Paciente p = controller.buscarPacientePorId(idSeleccionado);
-            txtNombre.setText(p.getNombre());
-            txtApellido.setText(p.getApellido());
-            txtDni.setText(String.valueOf(p.getDni()));
-            txtEmail.setText(p.getEmail());
-            txtCalle.setText(p.getDomicilio().getCalle());
-            txtNumero.setText(String.valueOf(p.getDomicilio().getNumero()));
-            txtLocalidad.setText(p.getDomicilio().getLocalidad());
-            txtProvincia.setText(p.getDomicilio().getProvincia());
-            cboObraSocial.setSelectedIndex(Boolean.TRUE.equals(p.getObraSocial()) ? 1 : 0);
+            PacienteRegistro datos = controller.buscarDatosPacientePorId(idSeleccionado);
+            cargarDatosEnFormulario(datos);
         } catch (ClinicaException e) {
             mostrarError(e.getMessage());
         }
     }
 
+    private void cargarDatosEnFormulario(PacienteRegistro datos) {
+        txtNombre.setText(datos.getNombre());
+        txtApellido.setText(datos.getApellido());
+        txtDni.setText(String.valueOf(datos.getDni()));
+        txtEmail.setText(datos.getEmail());
+        txtCalle.setText(datos.getCalle());
+        txtNumero.setText(String.valueOf(datos.getNumero()));
+        txtLocalidad.setText(datos.getLocalidad());
+        txtProvincia.setText(datos.getProvincia());
+        cboObraSocial.setSelectedIndex(Boolean.TRUE.equals(datos.getObraSocial()) ? 1 : 0);
+    }
+
     private void guardar() {
         try {
-            String nombre    = txtNombre.getText().trim();
-            String apellido  = txtApellido.getText().trim();
-            Integer dni      = Integer.parseInt(txtDni.getText().trim());
-            String email     = txtEmail.getText().trim();
-            String calle     = txtCalle.getText().trim();
-            Integer numero   = Integer.parseInt(txtNumero.getText().trim());
-            String localidad = txtLocalidad.getText().trim();
-            String provincia = txtProvincia.getText().trim();
-            Boolean obraSocial = cboObraSocial.getSelectedIndex() == 1;
-
+            PacienteRegistro datos = leerDatosFormulario();
             if (idSeleccionado == null) {
-                controller.registrarPaciente(nombre, apellido, dni, email, calle, numero, localidad, provincia, obraSocial);
+                controller.registrarPaciente(datos);
                 JOptionPane.showMessageDialog(this, "Paciente registrado correctamente.");
             } else {
-                controller.actualizarPaciente(idSeleccionado, nombre, apellido, dni, email, calle, numero, localidad, provincia, obraSocial);
+                controller.actualizarPaciente(new PacienteEdicion(idSeleccionado, datos));
                 JOptionPane.showMessageDialog(this, "Paciente actualizado correctamente.");
             }
             limpiarFormulario();
@@ -187,14 +201,28 @@ public class PacientePanel extends JPanel {
         }
     }
 
+    private PacienteRegistro leerDatosFormulario() {
+        PacienteRegistro datos = new PacienteRegistro();
+        datos.setNombre(txtNombre.getText().trim());
+        datos.setApellido(txtApellido.getText().trim());
+        datos.setDni(Integer.parseInt(txtDni.getText().trim()));
+        datos.setEmail(txtEmail.getText().trim());
+        datos.setCalle(txtCalle.getText().trim());
+        datos.setNumero(Integer.parseInt(txtNumero.getText().trim()));
+        datos.setLocalidad(txtLocalidad.getText().trim());
+        datos.setProvincia(txtProvincia.getText().trim());
+        datos.setObraSocial(cboObraSocial.getSelectedIndex() == 1);
+        return datos;
+    }
+
     private void eliminar() {
         if (idSeleccionado == null) {
             mostrarError("Seleccione un paciente de la tabla.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar el paciente seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 controller.eliminarPaciente(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Paciente eliminado correctamente.");
@@ -214,9 +242,9 @@ public class PacientePanel extends JPanel {
         }
         try {
             Integer dni = Integer.parseInt(texto);
-            Paciente p = controller.buscarPacientePorDni(dni);
+            Paciente paciente = controller.buscarPacientePorDni(dni);
             for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                if (modeloTabla.getValueAt(i, 3).equals(p.getDni())) {
+                if (modeloTabla.getValueAt(i, 3).equals(paciente.getDni())) {
                     tabla.setRowSelectionInterval(i, i);
                     tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
                     break;
