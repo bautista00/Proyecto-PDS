@@ -2,7 +2,7 @@
 
 ## Alcance
 
-Se revisó el proyecto hasta **"Nombre de método muy largo" inclusive**, que es el alcance indicado en clase. No se trabajó todavía sobre los smells posteriores del PDF (Código muerto, Data Class, Primitive Obsession, Intimidad inapropiada, etc.).
+Se revisó el proyecto hasta **"Nombre de método muy largo" inclusive**, que es el alcance indicado en clase.
 
 El criterio aplicado fue mantener cambios simples y justificables: un code smell es una señal de que algo puede mejorarse, no una regla mecánica que obligue a modificar cualquier caso que se parezca superficialmente.
 
@@ -267,36 +267,4 @@ Se mantuvieron nombres convencionales y locales como `i` para índices de bucles
 
 El código puede entenderse con menor necesidad de seguir mentalmente qué representa cada variable.
 
----
 
-## 10. Nombre de método muy largo
-
-### Resultado del análisis
-
-**No se detectó un caso claro que deba modificarse solamente por la longitud del nombre.**
-
-Existen métodos con nombres extensos, por ejemplo:
-
-```java
-buscarPorOdontologoYPaciente(...)
-validarConflictoHorarioExcluyendoTurno(...)
-```
-
-Sin embargo, cada uno representa una única responsabilidad.
-
-Acortar estos nombres únicamente para reducir su cantidad de caracteres haría que el código fuera menos expresivo.
-
-El smell se consideraría más evidente si el propio nombre indicara que el método realiza varias acciones diferentes, por ejemplo mediante expresiones del tipo `hacerXyY(...)`.
-
----
-
-## Verificación realizada
-
-Se verificó el funcionamiento general del proyecto después de aplicar las mejoras:
-
-- Compilación completa de todos los `.java` con `javac`: OK.
-- Alta, modificación, filtros y eliminación de turnos: OK.
-- Sincronización de historiales al cambiar Odontólogo o Secretaria: OK.
-- Actualización de un turno inexistente: rechazada correctamente.
-- Registro y edición mediante DTO de Paciente: OK.
-- Guardado y carga de persistencia, incluyendo campos escapados con `;`: OK.
