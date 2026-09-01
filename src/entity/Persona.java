@@ -6,10 +6,10 @@ public abstract class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    protected Long id;
-    protected String nombre;
-    protected String apellido;
-    protected Integer dni;
+    private Long id;
+    private String nombre;
+    private String apellido;
+    private Integer dni;
 
     public Persona(Long id, String nombre, String apellido, Integer dni) {
         this.id = id;

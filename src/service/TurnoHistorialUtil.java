@@ -20,6 +20,6 @@ public class TurnoHistorialUtil {
         LocalDate hoy = LocalDate.now();
         return turnos.stream().anyMatch(turno ->
                 !turno.getFecha().isBefore(hoy)
-                        && (turno.getEstado() == EstadoTurno.PENDIENTE || turno.getEstado() == EstadoTurno.CONFIRMADO));
+                        && turno.getEstado().estaActivo());
     }
 }

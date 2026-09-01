@@ -18,6 +18,7 @@ public class Paciente extends Persona implements Comparable<Paciente> {
     private LocalDate fechaAlta;
     private Domicilio domicilio;
     private Boolean obraSocial;
+    private CoberturaPaciente cobertura;
     private List<Turno> historialPaciente;
 
     public Paciente(String nombre, String apellido, Integer dni, String email, Domicilio domicilio, Boolean obraSocial) {
@@ -26,6 +27,9 @@ public class Paciente extends Persona implements Comparable<Paciente> {
         this.fechaAlta = LocalDate.now();
         this.domicilio = domicilio;
         this.obraSocial = obraSocial;
+        this.cobertura = Boolean.TRUE.equals(obraSocial)
+                ? new CoberturaObraSocial()
+                : new CoberturaParticular();
         this.historialPaciente = new ArrayList<>();
     }
 
@@ -75,14 +79,17 @@ public class Paciente extends Persona implements Comparable<Paciente> {
 
     public void setObraSocial(Boolean obraSocial) {
         this.obraSocial = obraSocial;
+        this.cobertura = Boolean.TRUE.equals(obraSocial)
+                ? new CoberturaObraSocial()
+                : new CoberturaParticular();
+    }
+
+    public CoberturaPaciente getCobertura() {
+        return cobertura;
     }
 
     public List<Turno> getHistorialPaciente() {
         return historialPaciente;
-    }
-
-    public void setHistorialPaciente(List<Turno> historialPaciente) {
-        this.historialPaciente = historialPaciente;
     }
 
     public void agregarTurno(Turno turno) {
@@ -97,11 +104,11 @@ public class Paciente extends Persona implements Comparable<Paciente> {
 
     @Override
     public int compareTo(Paciente otro) {
-        int cmpApellido = this.apellido.compareToIgnoreCase(otro.apellido);
+        int cmpApellido = this.getApellido().compareToIgnoreCase(otro.getApellido());
         if (cmpApellido != 0) {
             return cmpApellido;
         }
-        return this.nombre.compareToIgnoreCase(otro.nombre);
+        return this.getNombre().compareToIgnoreCase(otro.getNombre());
     }
 
     @Override

@@ -168,7 +168,27 @@ Las vistas, repositorios, consultas y servicios necesitan conocer menos detalles
 
 ---
 
-## 6. Herencia rechazada
+## 6. Intimidad inapropiada
+
+### Problema detectado
+
+`Persona` exponía sus atributos como `protected`, y las subclases accedían directamente a `id`, `nombre`, `apellido` y `dni`.
+
+Eso permitía que `Paciente`, `Odontologo` y `Secretaria` dependieran de la representación interna de su superclase.
+
+### Cambios realizados
+
+Se cambiaron los atributos de `Persona` a `private`.
+
+Se reemplazaron los accesos directos en las subclases por getters como `getId()`, `getNombre()`, `getApellido()` y `getDni()`.
+
+### Resultado
+
+La jerarquía quedó mejor encapsulada y las subclases dejaron de depender de la implementación interna de `Persona`.
+
+---
+
+## 7. Herencia rechazada
 
 ### Resultado del análisis
 
@@ -188,7 +208,7 @@ Además, conceptualmente las clases mantienen una relación válida de tipo **"e
 
 ---
 
-## 7. Lazy Class
+## 8. Lazy Class
 
 ### Resultado del análisis
 
@@ -205,7 +225,7 @@ Por lo tanto, aunque algunas clases sean pequeñas, su existencia está justific
 
 ---
 
-## 8. Complejidad artificial
+## 9. Complejidad artificial
 
 ### Resultado del análisis
 
@@ -224,7 +244,7 @@ La refactorización busca reducir complejidad y no reemplazar un problema simple
 
 ---
 
-## 9. Nombre de variable muy corto
+## 10. Nombre de variable muy corto
 
 ### Problema detectado
 
@@ -267,4 +287,71 @@ Se mantuvieron nombres convencionales y locales como `i` para índices de bucles
 
 El código puede entenderse con menor necesidad de seguir mentalmente qué representa cada variable.
 
+---
 
+## 11. Código muerto
+
+### Problema detectado
+
+Se encontraron métodos y setters conservados sin uso real en el flujo actual del proyecto.
+
+### Cambios realizados
+
+Se eliminó `Turno.generarMensajeRecordatorio()`, que no tenía llamadas en `src/`.
+
+Se eliminaron `PacienteController.buscarPacientePorId()` y `PacienteController.listarPacientes()`, porque la interfaz usa los accesos ordenados y la búsqueda de datos para edición.
+
+Se quitaron setters de historial que no tenían uso:
+
+- `Paciente.setHistorialPaciente(...)`
+- `Odontologo.setHistorialOdontologo(...)`
+- `Secretaria.setHistorialSecretaria(...)`
+
+Se quitaron setters de vínculo directo en `Turno`:
+
+- `setOdontologo(...)`
+- `setSecretaria(...)`
+
+### Resultado
+
+El código quedó más cohesivo y con menos superficie muerta o peligrosa para mantener inconsistencias.
+
+---
+
+## 12. Data Class / Only Accessors
+
+### Problema detectado
+
+`Domicilio` estaba modelado como una clase de datos pura: campos, getters, setters y `toString()`.
+
+### Cambios realizados
+
+Se convirtió `Domicilio` en un objeto de valor inmutable, sin setters y con sus atributos finales.
+
+### Resultado
+
+`Domicilio` dejó de verse como un contenedor de datos mutable y pasó a representar un valor estable del dominio.
+
+---
+
+## 13. Primitive Obsession
+
+### Problema detectado
+
+La cobertura del paciente estaba representada solo por un `Boolean`, y el estado del turno se evaluaba con comparaciones directas contra constantes del enum.
+
+### Cambios realizados
+
+Se introdujo una abstracción simple para la cobertura del paciente:
+
+- `CoberturaPaciente`
+- `CoberturaObraSocial`
+- `CoberturaParticular`
+
+`Facturador` ahora delega el cálculo del monto en la cobertura del paciente.
+
+También `EstadoTurno` incorporó `estaActivo()`, y `TurnoHistorialUtil` usa ese comportamiento en lugar de comparar valores sueltos.
+
+### Resultado
+
+La lógica dejó de depender tanto de primitivos y comparaciones directas, y el comportamiento quedó más cerca del dominio.

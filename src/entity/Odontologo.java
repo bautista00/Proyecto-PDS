@@ -38,10 +38,6 @@ public abstract class Odontologo extends Persona {
         return historialOdontologo;
     }
 
-    public void setHistorialOdontologo(List<Turno> historialOdontologo) {
-        this.historialOdontologo = historialOdontologo;
-    }
-
     public void agregarTurno(Turno turno) {
         if (turno != null && !historialOdontologo.contains(turno)) {
             historialOdontologo.add(turno);
@@ -75,9 +71,9 @@ public abstract class Odontologo extends Persona {
     @Override
     public String toString() {
         return "\n=== Informacion del Odontologo ===" +
-                "\nID: " + id +
-                "\nNombre: " + nombre + " " + apellido +
-                "\nDNI: " + dni +
+                "\nID: " + getId() +
+                "\nNombre: " + getNombre() + " " + getApellido() +
+                "\nDNI: " + getDni() +
                 "\nMatricula: " + matricula +
                 "\nEspecialidad: " + getEspecialidad();
     }

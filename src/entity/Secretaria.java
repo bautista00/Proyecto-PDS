@@ -21,14 +21,6 @@ public class Secretaria extends Persona {
         Secretaria.contadorId = contadorId;
     }
 
-    public List<Turno> getHistorialSecretaria() {
-        return historialSecretaria;
-    }
-
-    public void setHistorialSecretaria(List<Turno> historialSecretaria) {
-        this.historialSecretaria = historialSecretaria;
-    }
-
     public void agregarTurno(Turno turno) {
         if (turno != null && !historialSecretaria.contains(turno)) {
             historialSecretaria.add(turno);
@@ -42,8 +34,8 @@ public class Secretaria extends Persona {
     @Override
     public String toString() {
         return "\n=== Informacion de la Secretaria ===" +
-                "\n ID: " + id +
-                "\n Nombre: " + nombre + " " + apellido +
-                "\n DNI: " + dni;
+                "\n ID: " + getId() +
+                "\n Nombre: " + getNombre() + " " + getApellido() +
+                "\n DNI: " + getDni();
     }
 }

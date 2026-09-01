@@ -4,5 +4,9 @@ public enum EstadoTurno {
     PENDIENTE,
     CONFIRMADO,
     CANCELADO,
-    COMPLETADO
+    COMPLETADO;
+
+    public boolean estaActivo() {
+        return this == PENDIENTE || this == CONFIRMADO;
+    }
 }

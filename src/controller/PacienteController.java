@@ -23,10 +23,6 @@ public class PacienteController {
         return pacienteService.registrar(paciente);
     }
 
-    public Paciente buscarPacientePorId(Long id) {
-        return pacienteService.buscarPorId(id);
-    }
-
     public PacienteRegistro buscarDatosPacientePorId(Long id) {
         Paciente paciente = pacienteService.buscarPorId(id);
         return crearDatosPaciente(paciente);
@@ -34,10 +30,6 @@ public class PacienteController {
 
     public Paciente buscarPacientePorDni(Integer dni) {
         return pacienteService.buscarPorDni(dni);
-    }
-
-    public List<Paciente> listarPacientes() {
-        return pacienteService.listarTodos();
     }
 
     public List<Paciente> listarPacientesOrdenadosPorApellido() {

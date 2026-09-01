@@ -71,10 +71,6 @@ public class Turno implements Serializable {
         return odontologo.getEspecialidad();
     }
 
-    public void setOdontologo(Odontologo odontologo) {
-        this.odontologo = odontologo;
-    }
-
     public Secretaria getSecretaria() {
         return secretaria;
     }
@@ -85,10 +81,6 @@ public class Turno implements Serializable {
 
     public String getNombreSecretaria() {
         return secretaria.getNombreCompleto();
-    }
-
-    public void setSecretaria(Secretaria secretaria) {
-        this.secretaria = secretaria;
     }
 
     public void vincularConActores() {
@@ -149,14 +141,6 @@ public class Turno implements Serializable {
 
     public void setEstado(EstadoTurno estado) {
         this.estado = estado;
-    }
-
-    public String generarMensajeRecordatorio() {
-        return "Recordatorio de turno: Paciente " + getNombrePaciente() +
-                ", Odontologo " + getNombreOdontologo() +
-                ", fecha " + fecha +
-                ", hora " + hora +
-                ", motivo " + motivoConsulta + ".";
     }
 
     @Override
