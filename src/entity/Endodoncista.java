@@ -7,12 +7,7 @@ public class Endodoncista extends Odontologo {
     private static final Double TARIFA_BASE = 80000.0;
 
     public Endodoncista(String nombre, String apellido, Integer dni, String matricula) {
-        super(nombre, apellido, dni, matricula);
-    }
-
-    @Override
-    public String getEspecialidad() {
-        return "Endodoncia";
+        super(nombre, apellido, dni, matricula, EspecialidadOdontologica.ENDODONCIA);
     }
 
     @Override

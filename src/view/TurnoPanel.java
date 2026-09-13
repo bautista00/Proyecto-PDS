@@ -80,7 +80,7 @@ public class TurnoPanel extends JPanel {
         cboOdontologo.removeAllItems();
         for (Odontologo odontologo : listaOdontologos) {
             cboOdontologo.addItem(odontologo.getId() + " - " + odontologo.getNombreCompleto()
-                    + " (" + odontologo.getEspecialidad() + ")");
+                    + " (" + odontologo.getEspecialidad().getDescripcion() + ")");
         }
 
         cboSecretaria.removeAllItems();
@@ -242,7 +242,7 @@ public class TurnoPanel extends JPanel {
                     turno.getId(),
                     turno.getNombrePaciente(),
                     turno.getNombreOdontologo(),
-                    turno.getEspecialidadOdontologo(),
+                    turno.getEspecialidadOdontologo().getDescripcion(),
                     turno.getNombreSecretaria(),
                     turno.getFecha().toString(),
                     turno.getHora().toString(),

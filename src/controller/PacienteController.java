@@ -49,7 +49,7 @@ public class PacienteController {
         pacienteExistente.setDni(datos.getDni());
         pacienteExistente.setEmail(datos.getEmail());
         pacienteExistente.setDomicilio(crearDomicilio(datos));
-        pacienteExistente.setObraSocial(datos.getObraSocial());
+        pacienteExistente.setCobertura(datos.getCobertura());
 
         return pacienteService.actualizar(pacienteExistente);
     }
@@ -65,7 +65,7 @@ public class PacienteController {
                 datos.getDni(),
                 datos.getEmail(),
                 crearDomicilio(datos),
-                datos.getObraSocial());
+                datos.getCobertura());
     }
 
     private Domicilio crearDomicilio(PacienteRegistro datos) {
@@ -86,7 +86,7 @@ public class PacienteController {
         datos.setNumero(paciente.getNumeroDomicilio());
         datos.setLocalidad(paciente.getLocalidadDomicilio());
         datos.setProvincia(paciente.getProvinciaDomicilio());
-        datos.setObraSocial(paciente.getObraSocial());
+        datos.setCobertura(paciente.getCobertura());
         return datos;
     }
     private void validarDatosPaciente(PacienteRegistro datos) {

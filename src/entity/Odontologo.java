@@ -1,8 +1,5 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Odontologo extends Persona {
 
     private static final long serialVersionUID = 1L;
@@ -14,12 +11,21 @@ public abstract class Odontologo extends Persona {
     }
 
     private String matricula;
-    private List<Turno> historialOdontologo;
+    private final EspecialidadOdontologica especialidad;
+    private final HistorialTurnos historialOdontologo;
 
-    protected Odontologo(String nombre, String apellido, Integer dni, String matricula) {
+    protected Odontologo(String nombre,
+                         String apellido,
+                         Integer dni,
+                         String matricula,
+                         EspecialidadOdontologica especialidad) {
         super(generarId(), nombre, apellido, dni);
         this.matricula = matricula;
-        this.historialOdontologo = new ArrayList<>();
+        if (especialidad == null) {
+            throw new IllegalArgumentException("La especialidad no puede ser nula.");
+        }
+        this.especialidad = especialidad;
+        this.historialOdontologo = new HistorialTurnos();
     }
 
     private static Long generarId() {
@@ -34,21 +40,21 @@ public abstract class Odontologo extends Persona {
         this.matricula = matricula;
     }
 
-    public List<Turno> getHistorialOdontologo() {
-        return historialOdontologo;
+    public boolean tieneTurnosFuturos() {
+        return historialOdontologo.tieneTurnosFuturos();
     }
 
-    public void agregarTurno(Turno turno) {
-        if (turno != null && !historialOdontologo.contains(turno)) {
-            historialOdontologo.add(turno);
-        }
+    void agregarTurno(Turno turno) {
+        historialOdontologo.agregar(turno);
     }
 
-    public void removerTurno(Turno turno) {
-        historialOdontologo.remove(turno);
+    void removerTurno(Turno turno) {
+        historialOdontologo.remover(turno);
     }
 
-    public abstract String getEspecialidad();
+    public EspecialidadOdontologica getEspecialidad() {
+        return especialidad;
+    }
 
     public abstract Double getTarifaBase();
 

@@ -67,7 +67,7 @@ public class Turno implements Serializable {
         return odontologo.getNombreCompleto();
     }
 
-    public String getEspecialidadOdontologo() {
+    public EspecialidadOdontologica getEspecialidadOdontologo() {
         return odontologo.getEspecialidad();
     }
 
@@ -137,6 +137,13 @@ public class Turno implements Serializable {
 
     public EstadoTurno getEstado() {
         return estado;
+    }
+
+    public boolean estaActivoDesde(LocalDate fechaReferencia) {
+        if (fechaReferencia == null) {
+            throw new IllegalArgumentException("La fecha de referencia no puede ser nula.");
+        }
+        return !fecha.isBefore(fechaReferencia) && estado.estaActivo();
     }
 
     public void setEstado(EstadoTurno estado) {

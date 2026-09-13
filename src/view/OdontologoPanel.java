@@ -1,10 +1,9 @@
 package view;
 
 import controller.OdontologoController;
-import entity.Endodoncista;
+import entity.EspecialidadOdontologica;
 import entity.Odontologo;
-import entity.OdontologoGeneral;
-import entity.Ortodoncista;
+import entity.OdontologoFactory;
 import exception.ClinicaException;
 
 import javax.swing.*;
@@ -21,7 +20,7 @@ public class OdontologoPanel extends JPanel {
     private DefaultTableModel modeloTabla;
 
     private JTextField txtNombre, txtApellido, txtDni, txtMatricula, txtBuscarMatricula;
-    private JComboBox<String> cboEspecialidad;
+    private JComboBox<EspecialidadOdontologica> cboEspecialidad;
     private Long idSeleccionado;
 
     public OdontologoPanel(OdontologoController controller) {
@@ -63,7 +62,7 @@ public class OdontologoPanel extends JPanel {
         txtApellido        = new JTextField(15);
         txtDni             = new JTextField(10);
         txtMatricula       = new JTextField(10);
-        cboEspecialidad    = new JComboBox<>(new String[]{"General", "Ortodoncista", "Endodoncista"});
+        cboEspecialidad    = new JComboBox<>(EspecialidadOdontologica.values());
         txtBuscarMatricula = new JTextField(10);
 
         gbc.gridy = 0;
@@ -120,7 +119,7 @@ public class OdontologoPanel extends JPanel {
                         odontologo.getApellido(),
                         odontologo.getDni(),
                         odontologo.getMatricula(),
-                        odontologo.getEspecialidad(),
+                        odontologo.getEspecialidad().getDescripcion(),
                         String.format("$%.0f", odontologo.getTarifaBase())
                 });
             }
@@ -139,11 +138,8 @@ public class OdontologoPanel extends JPanel {
             txtApellido.setText(odontologo.getApellido());
             txtDni.setText(String.valueOf(odontologo.getDni()));
             txtMatricula.setText(odontologo.getMatricula());
-            switch (odontologo.getEspecialidad()) {
-                case "Ortodoncia":  cboEspecialidad.setSelectedIndex(1); break;
-                case "Endodoncia":  cboEspecialidad.setSelectedIndex(2); break;
-                default:            cboEspecialidad.setSelectedIndex(0); break;
-            }
+            cboEspecialidad.setSelectedItem(odontologo.getEspecialidad());
+            cboEspecialidad.setEnabled(false);
         } catch (ClinicaException e) {
             mostrarError(e.getMessage());
         }
@@ -157,12 +153,14 @@ public class OdontologoPanel extends JPanel {
             String matricula = txtMatricula.getText().trim();
 
             if (idSeleccionado == null) {
-                Odontologo nuevo;
-                switch (cboEspecialidad.getSelectedIndex()) {
-                    case 1:  nuevo = new Ortodoncista(nombre, apellido, dni, matricula); break;
-                    case 2:  nuevo = new Endodoncista(nombre, apellido, dni, matricula); break;
-                    default: nuevo = new OdontologoGeneral(nombre, apellido, dni, matricula); break;
-                }
+                EspecialidadOdontologica especialidad =
+                        (EspecialidadOdontologica) cboEspecialidad.getSelectedItem();
+                Odontologo nuevo = OdontologoFactory.crear(
+                        especialidad,
+                        nombre,
+                        apellido,
+                        dni,
+                        matricula);
                 controller.registrarOdontologo(nuevo);
                 JOptionPane.showMessageDialog(this, "Odontólogo registrado correctamente.");
             } else {
@@ -225,7 +223,8 @@ public class OdontologoPanel extends JPanel {
         txtDni.setText("");
         txtMatricula.setText("");
         txtBuscarMatricula.setText("");
-        cboEspecialidad.setSelectedIndex(0);
+        cboEspecialidad.setEnabled(true);
+        cboEspecialidad.setSelectedItem(EspecialidadOdontologica.GENERAL);
         tabla.clearSelection();
     }
 

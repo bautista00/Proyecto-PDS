@@ -1,8 +1,6 @@
 package service;
 
-import entity.EstadoTurno;
 import entity.Odontologo;
-import entity.Turno;
 import exception.DatoInvalidoException;
 import exception.OdontologoNoEncontradoException;
 import repository.OdontologoRepository;
@@ -84,7 +82,7 @@ public class OdontologoServiceImpl implements IService<Odontologo> {
             throw new OdontologoNoEncontradoException("No existe un odontologo con ID " + id + ".");
         }
 
-        if (TurnoHistorialUtil.tieneTurnosFuturos(odontologo.getHistorialOdontologo())) {
+        if (odontologo.tieneTurnosFuturos()) {
             throw new DatoInvalidoException(
                     "No se puede eliminar el odontologo porque tiene turnos a futuro. " +
                     "Cancele o complete esos turnos antes de eliminarlo.");

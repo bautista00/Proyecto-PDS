@@ -1,19 +1,16 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Secretaria extends Persona {
 
     private static final long serialVersionUID = 1L;
 
     private static Long contadorId = 0L;
 
-    private List<Turno> historialSecretaria;
+    private final HistorialTurnos historialSecretaria;
 
     public Secretaria(String nombre, String apellido, Integer dni) {
         super(++contadorId, nombre, apellido, dni);
-        this.historialSecretaria = new ArrayList<>();
+        this.historialSecretaria = new HistorialTurnos();
     }
 
 
@@ -21,14 +18,12 @@ public class Secretaria extends Persona {
         Secretaria.contadorId = contadorId;
     }
 
-    public void agregarTurno(Turno turno) {
-        if (turno != null && !historialSecretaria.contains(turno)) {
-            historialSecretaria.add(turno);
-        }
+    void agregarTurno(Turno turno) {
+        historialSecretaria.agregar(turno);
     }
 
-    public void removerTurno(Turno turno) {
-        historialSecretaria.remove(turno);
+    void removerTurno(Turno turno) {
+        historialSecretaria.remover(turno);
     }
 
     @Override

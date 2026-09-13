@@ -1,5 +1,7 @@
 package dto;
 
+import entity.CoberturaPaciente;
+
 public class PacienteRegistro {
 
     private String nombre;
@@ -10,7 +12,7 @@ public class PacienteRegistro {
     private Integer numero;
     private String localidad;
     private String provincia;
-    private Boolean obraSocial;
+    private CoberturaPaciente cobertura;
 
     public String getNombre() {
         return nombre;
@@ -76,11 +78,11 @@ public class PacienteRegistro {
         this.provincia = provincia;
     }
 
-    public Boolean getObraSocial() {
-        return obraSocial;
+    public CoberturaPaciente getCobertura() {
+        return cobertura;
     }
 
-    public void setObraSocial(Boolean obraSocial) {
-        this.obraSocial = obraSocial;
+    public void setCobertura(CoberturaPaciente cobertura) {
+        this.cobertura = cobertura;
     }
 }

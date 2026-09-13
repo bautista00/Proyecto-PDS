@@ -3,6 +3,7 @@ package view;
 import controller.PacienteController;
 import dto.PacienteEdicion;
 import dto.PacienteRegistro;
+import entity.CoberturaPaciente;
 import entity.Paciente;
 import exception.ClinicaException;
 
@@ -22,7 +23,7 @@ public class PacientePanel extends JPanel {
 
     private JTextField txtNombre, txtApellido, txtDni, txtEmail;
     private JTextField txtCalle, txtNumero, txtLocalidad, txtProvincia;
-    private JComboBox<String> cboObraSocial;
+    private JComboBox<CoberturaPaciente> cboCobertura;
     private JTextField txtBuscarDni;
     private Long idSeleccionado;
 
@@ -37,7 +38,7 @@ public class PacientePanel extends JPanel {
     }
 
     private JScrollPane crearPanelTabla() {
-        String[] columnas = {"ID", "Nombre", "Apellido", "DNI", "Email", "Obra Social"};
+        String[] columnas = {"ID", "Nombre", "Apellido", "DNI", "Email", "Cobertura"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int fila, int columna) { return false; }
@@ -78,7 +79,7 @@ public class PacientePanel extends JPanel {
         agregarCampo(panel, gbc, 2, "Provincia:", txtProvincia);
 
         gbc.gridy = 4;
-        agregarCampo(panel, gbc, 0, "Obra Social:", cboObraSocial);
+        agregarCampo(panel, gbc, 0, "Cobertura:", cboCobertura);
         agregarCampo(panel, gbc, 2, "Buscar por DNI:", txtBuscarDni);
         return panel;
     }
@@ -99,7 +100,7 @@ public class PacientePanel extends JPanel {
         txtNumero = new JTextField(5);
         txtLocalidad = new JTextField(15);
         txtProvincia = new JTextField(15);
-        cboObraSocial = new JComboBox<>(new String[]{"No", "Sí"});
+        cboCobertura = new JComboBox<>(CoberturaPaciente.values());
         txtBuscarDni = new JTextField(10);
     }
 
@@ -150,7 +151,7 @@ public class PacientePanel extends JPanel {
                         paciente.getApellido(),
                         paciente.getDni(),
                         paciente.getEmail(),
-                        paciente.getObraSocial() ? "Sí" : "No"
+                        paciente.getCobertura().getDescripcion()
                 });
             }
         } catch (ClinicaException e) {
@@ -179,7 +180,7 @@ public class PacientePanel extends JPanel {
         txtNumero.setText(String.valueOf(datos.getNumero()));
         txtLocalidad.setText(datos.getLocalidad());
         txtProvincia.setText(datos.getProvincia());
-        cboObraSocial.setSelectedIndex(Boolean.TRUE.equals(datos.getObraSocial()) ? 1 : 0);
+        cboCobertura.setSelectedItem(datos.getCobertura());
     }
 
     private void guardar() {
@@ -211,7 +212,7 @@ public class PacientePanel extends JPanel {
         datos.setNumero(Integer.parseInt(txtNumero.getText().trim()));
         datos.setLocalidad(txtLocalidad.getText().trim());
         datos.setProvincia(txtProvincia.getText().trim());
-        datos.setObraSocial(cboObraSocial.getSelectedIndex() == 1);
+        datos.setCobertura((CoberturaPaciente) cboCobertura.getSelectedItem());
         return datos;
     }
 
@@ -268,7 +269,7 @@ public class PacientePanel extends JPanel {
         txtNumero.setText("");
         txtLocalidad.setText("");
         txtProvincia.setText("");
-        cboObraSocial.setSelectedIndex(0);
+        cboCobertura.setSelectedItem(CoberturaPaciente.PARTICULAR);
         txtBuscarDni.setText("");
         tabla.clearSelection();
     }

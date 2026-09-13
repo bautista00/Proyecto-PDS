@@ -1,8 +1,6 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Paciente extends Persona implements Comparable<Paciente> {
 
@@ -17,20 +15,21 @@ public class Paciente extends Persona implements Comparable<Paciente> {
     private String email;
     private LocalDate fechaAlta;
     private Domicilio domicilio;
-    private Boolean obraSocial;
     private CoberturaPaciente cobertura;
-    private List<Turno> historialPaciente;
+    private final HistorialTurnos historialPaciente;
 
-    public Paciente(String nombre, String apellido, Integer dni, String email, Domicilio domicilio, Boolean obraSocial) {
+    public Paciente(String nombre,
+                    String apellido,
+                    Integer dni,
+                    String email,
+                    Domicilio domicilio,
+                    CoberturaPaciente cobertura) {
         super(++contadorId, nombre, apellido, dni);
         this.email = email;
         this.fechaAlta = LocalDate.now();
         this.domicilio = domicilio;
-        this.obraSocial = obraSocial;
-        this.cobertura = Boolean.TRUE.equals(obraSocial)
-                ? new CoberturaObraSocial()
-                : new CoberturaParticular();
-        this.historialPaciente = new ArrayList<>();
+        this.cobertura = cobertura;
+        this.historialPaciente = new HistorialTurnos();
     }
 
     public String getEmail() {
@@ -73,33 +72,24 @@ public class Paciente extends Persona implements Comparable<Paciente> {
         this.domicilio = domicilio;
     }
 
-    public Boolean getObraSocial() {
-        return obraSocial;
-    }
-
-    public void setObraSocial(Boolean obraSocial) {
-        this.obraSocial = obraSocial;
-        this.cobertura = Boolean.TRUE.equals(obraSocial)
-                ? new CoberturaObraSocial()
-                : new CoberturaParticular();
-    }
-
     public CoberturaPaciente getCobertura() {
         return cobertura;
     }
 
-    public List<Turno> getHistorialPaciente() {
-        return historialPaciente;
+    public void setCobertura(CoberturaPaciente cobertura) {
+        this.cobertura = cobertura;
     }
 
-    public void agregarTurno(Turno turno) {
-        if (turno != null && !historialPaciente.contains(turno)) {
-            historialPaciente.add(turno);
-        }
+    public boolean tieneTurnosFuturos() {
+        return historialPaciente.tieneTurnosFuturos();
     }
 
-    public void removerTurno(Turno turno) {
-        historialPaciente.remove(turno);
+    void agregarTurno(Turno turno) {
+        historialPaciente.agregar(turno);
+    }
+
+    void removerTurno(Turno turno) {
+        historialPaciente.remover(turno);
     }
 
     @Override
@@ -118,6 +108,6 @@ public class Paciente extends Persona implements Comparable<Paciente> {
                 "\n Email: " + email +
                 "\n Fecha Alta: " + fechaAlta +
                 "\n Domicilio: " + domicilio +
-                "\n Obra Social: " + (obraSocial ? "Si" : "No");
+                "\n Cobertura: " + cobertura;
     }
 }

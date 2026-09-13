@@ -7,12 +7,7 @@ public class Ortodoncista extends Odontologo {
     private static final Double TARIFA_BASE = 70000.0;
 
     public Ortodoncista(String nombre, String apellido, Integer dni, String matricula) {
-        super(nombre, apellido, dni, matricula);
-    }
-
-    @Override
-    public String getEspecialidad() {
-        return "Ortodoncia";
+        super(nombre, apellido, dni, matricula, EspecialidadOdontologica.ORTODONCIA);
     }
 
     @Override

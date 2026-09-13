@@ -1,9 +1,7 @@
 package service;
 
 import entity.Domicilio;
-import entity.EstadoTurno;
 import entity.Paciente;
-import entity.Turno;
 import exception.DatoInvalidoException;
 import exception.PacienteNoEncontradoException;
 import repository.PacienteRepository;
@@ -92,7 +90,7 @@ public class PacienteServiceImpl implements IService<Paciente> {
             throw new PacienteNoEncontradoException("No existe un paciente con ID " + id + ".");
         }
 
-        if (TurnoHistorialUtil.tieneTurnosFuturos(paciente.getHistorialPaciente())) {
+        if (paciente.tieneTurnosFuturos()) {
             throw new DatoInvalidoException(
                     "No se puede eliminar el paciente porque tiene turnos a futuro. " +
                     "Cancele o complete esos turnos antes de eliminarlo.");
@@ -112,8 +110,8 @@ public class PacienteServiceImpl implements IService<Paciente> {
         ValidacionesClinica.validarApellidoSoloLetras(paciente.getApellido());
         ValidacionesClinica.validarDniPositivo(paciente.getDni());
         ValidacionesClinica.validarEmailNoVacio(paciente.getEmail());
-        if (paciente.getObraSocial() == null) {
-            throw new DatoInvalidoException("Debe indicarse si el paciente tiene obra social.");
+        if (paciente.getCobertura() == null) {
+            throw new DatoInvalidoException("Debe indicarse la cobertura del paciente.");
         }
         validarDomicilio(paciente.getDomicilio());
     }
