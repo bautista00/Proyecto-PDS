@@ -24,6 +24,10 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Pantalla de turnos. Es la única que necesita los cuatro controllers, porque un turno
+// relaciona paciente, odontólogo y secretaria.
+// Delega la tabla, el formulario y los filtros en TurnoTablaPanel, TurnoFormularioPanel y
+// TurnoFiltrosPanel, y les conecta las acciones de guardar, eliminar, filtrar y calcular monto.
 public class TurnoPanel extends JPanel {
 
     private final TurnoController turnoController;

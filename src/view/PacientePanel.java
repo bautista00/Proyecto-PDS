@@ -14,6 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+// Pantalla de ABM de pacientes: tabla, formulario y botones de alta, baja,
+// modificación y búsqueda por DNI.
+// Solo arma la interfaz y muestra resultados: toda la lógica la delega en PacienteController.
 public class PacientePanel extends JPanel {
 
     private final PacienteController controller;

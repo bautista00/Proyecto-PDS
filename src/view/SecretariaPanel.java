@@ -12,6 +12,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// Pantalla de ABM de secretarias: tabla, formulario y botones de alta, baja,
+// modificación y búsqueda por DNI.
+// Solo arma la interfaz y muestra resultados: toda la lógica la delega en SecretariaController.
 public class SecretariaPanel extends JPanel {
 
     private final SecretariaController controller;

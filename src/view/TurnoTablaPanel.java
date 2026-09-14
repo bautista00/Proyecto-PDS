@@ -14,6 +14,10 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+// Tabla de turnos en modo solo lectura (las celdas no se editan).
+// Se extrajo de TurnoPanel para separar el armado de la grilla de la lógica de la pantalla.
+// Cuando el usuario hace clic en una fila, avisa el ID del turno mediante el Consumer
+// que recibe en el constructor: no sabe qué se hace con ese ID.
 final class TurnoTablaPanel extends JPanel {
 
     private final JTable tabla;

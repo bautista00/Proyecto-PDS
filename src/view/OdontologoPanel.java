@@ -13,6 +13,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// Pantalla de ABM de odontólogos: tabla, formulario y botones de alta, baja,
+// modificación y búsqueda por matrícula.
+// Solo arma la interfaz y muestra resultados: toda la lógica la delega en OdontologoController.
 public class OdontologoPanel extends JPanel {
 
     private final OdontologoController controller;

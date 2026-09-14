@@ -9,6 +9,10 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// Ventana principal de la aplicación: arma las cuatro pestañas (Pacientes, Odontólogos,
+// Secretarias y Turnos) y las muestra.
+// Recibe los controllers ya construidos desde DependenciasClinica, no los crea.
+// Al cerrar la ventana pregunta si se quieren guardar los datos antes de salir.
 public class MainFrame extends JFrame {
 
     private final Runnable guardarDatos;

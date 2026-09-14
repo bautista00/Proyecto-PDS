@@ -4,6 +4,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
 
+// Fila de botones para filtrar los turnos (por paciente, odontólogo, secretaria, fechas o estado).
+// Se extrajo de TurnoPanel para sacarle el armado de esos seis botones.
+// Recibe un Runnable por botón, así que no sabe qué hace cada filtro: solo los muestra y los dispara.
 final class TurnoFiltrosPanel extends JPanel {
 
     TurnoFiltrosPanel(Runnable verTodos,

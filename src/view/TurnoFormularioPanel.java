@@ -20,6 +20,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+// Formulario de carga y edición de un turno (combos de paciente, odontólogo, secretaria
+// y estado, más fecha, hora y motivo).
+// Se extrajo de TurnoPanel para aislar el manejo de los campos de pantalla.
+// Su tarea es traducir en las dos direcciones: de los campos a los DTOs TurnoRegistro
+// y TurnoEdicion, y de un Turno existente a los campos.
 final class TurnoFormularioPanel extends JPanel {
 
     private final JComboBox<OpcionEntidad<Paciente>> cboPaciente = new JComboBox<>();
