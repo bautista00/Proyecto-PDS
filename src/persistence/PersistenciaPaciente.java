@@ -41,46 +41,39 @@ final class PersistenciaPaciente {
 
     PacienteRepository cargar() {
         PacienteRepository repository = new PacienteRepository();
-        long maxId = 0;
 
         for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
             try {
-                long id = cargarDesdeLinea(linea, repository);
-                if (id > maxId) {
-                    maxId = id;
-                }
+                cargarDesdeLinea(linea, repository);
             } catch (RuntimeException excepcion) {
                 System.err.println("Paciente ignorado, linea invalida: " + linea);
             }
         }
-
-        Paciente.setContadorId(maxId);
         return repository;
     }
 
-    private long cargarDesdeLinea(String linea, PacienteRepository repository) {
+    private void cargarDesdeLinea(String linea, PacienteRepository repository) {
         List<String> campos = FormatoLinea.parsear(linea);
         long id = Long.parseLong(campos.get(0));
-        Paciente.setContadorId(id - 1);
 
         Domicilio domicilio = new Domicilio(
                 campos.get(6),
                 Integer.parseInt(campos.get(7)),
                 campos.get(8),
                 campos.get(9));
-        Paciente paciente = new Paciente(
+        Paciente paciente = Paciente.rehidratar(
+                id,
                 campos.get(1),
                 campos.get(2),
                 Integer.parseInt(campos.get(3)),
                 campos.get(4),
+                LocalDate.parse(campos.get(5)),
                 domicilio,
                 convertirCoberturaPersistida(campos.get(10)));
-        paciente.setFechaAlta(LocalDate.parse(campos.get(5)));
         repository.guardar(paciente);
-        return id;
     }
 
     private CoberturaPaciente convertirCoberturaPersistida(String valor) {

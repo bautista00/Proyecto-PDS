@@ -10,6 +10,10 @@ public class Ortodoncista extends Odontologo {
         super(nombre, apellido, dni, matricula, EspecialidadOdontologica.ORTODONCIA);
     }
 
+    Ortodoncista(Long id, String nombre, String apellido, Integer dni, String matricula) {
+        super(id, nombre, apellido, dni, matricula, EspecialidadOdontologica.ORTODONCIA);
+    }
+
     @Override
     public Double getTarifaBase() {
         return TARIFA_BASE;

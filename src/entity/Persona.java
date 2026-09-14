@@ -12,6 +12,8 @@ public abstract class Persona implements Serializable {
     private Integer dni;
 
     public Persona(Long id, String nombre, String apellido, Integer dni) {
+        validarId(id);
+        validarDatosPersonales(nombre, apellido, dni);
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -26,16 +28,8 @@ public abstract class Persona implements Serializable {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getApellido() {
         return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public Integer getDni() {
@@ -46,8 +40,34 @@ public abstract class Persona implements Serializable {
         return nombre + " " + apellido;
     }
 
-    public void setDni(Integer dni) {
+    protected final void actualizarDatosPersonales(String nombre, String apellido, Integer dni) {
+        validarDatosPersonales(nombre, apellido, dni);
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.dni = dni;
+    }
+
+    protected final void validarDatosPersonales(String nombre, String apellido, Integer dni) {
+        validarNombre(nombre, "El nombre no puede estar vacio.");
+        validarNombre(apellido, "El apellido no puede estar vacio.");
+        if (dni == null || dni <= 0) {
+            throw new IllegalArgumentException("El DNI debe ser un numero positivo.");
+        }
+    }
+
+    private void validarNombre(String valor, String mensajeVacio) {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new IllegalArgumentException(mensajeVacio);
+        }
+        if (!valor.matches("[\\p{L}' ]+")) {
+            throw new IllegalArgumentException("El nombre y el apellido solo pueden contener letras.");
+        }
+    }
+
+    private void validarId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser un numero positivo.");
+        }
     }
 
     @Override

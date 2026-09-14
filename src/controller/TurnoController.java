@@ -4,16 +4,16 @@ import dto.TurnoEdicion;
 import dto.TurnoRegistro;
 import entity.EstadoTurno;
 import entity.Turno;
-import service.TurnoServiceImpl;
+import service.TurnoService;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class TurnoController {
 
-    private final TurnoServiceImpl turnoService;
+    private final TurnoService turnoService;
 
-    public TurnoController(TurnoServiceImpl turnoService) {
+    public TurnoController(TurnoService turnoService) {
         this.turnoService = turnoService;
     }
 

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OdontologoRepository implements IRepository<Odontologo> {
+public class OdontologoRepository implements IOdontologoRepository {
 
     private Map<Long, Odontologo> odontologos;
 

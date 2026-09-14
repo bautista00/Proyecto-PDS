@@ -10,6 +10,10 @@ public class OdontologoGeneral extends Odontologo {
         super(nombre, apellido, dni, matricula, EspecialidadOdontologica.GENERAL);
     }
 
+    OdontologoGeneral(Long id, String nombre, String apellido, Integer dni, String matricula) {
+        super(id, nombre, apellido, dni, matricula, EspecialidadOdontologica.GENERAL);
+    }
+
     @Override
     public Double getTarifaBase() {
         return TARIFA_BASE;

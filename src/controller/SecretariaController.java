@@ -1,21 +1,22 @@
 package controller;
 
+import dto.SecretariaEdicion;
+import dto.SecretariaRegistro;
 import entity.Secretaria;
-import service.SecretariaServiceImpl;
+import service.SecretariaService;
 
 import java.util.List;
 
 public class SecretariaController {
 
-    private SecretariaServiceImpl secretariaService;
+    private final SecretariaService secretariaService;
 
-    public SecretariaController(SecretariaServiceImpl secretariaService) {
+    public SecretariaController(SecretariaService secretariaService) {
         this.secretariaService = secretariaService;
     }
 
-    public Secretaria registrarSecretaria(String nombre, String apellido, Integer dni) {
-        Secretaria secretaria = new Secretaria(nombre, apellido, dni);
-        return secretariaService.registrar(secretaria);
+    public Secretaria registrarSecretaria(SecretariaRegistro datos) {
+        return secretariaService.registrar(datos);
     }
 
     public Secretaria buscarSecretariaPorId(Long id) {
@@ -30,14 +31,8 @@ public class SecretariaController {
         return secretariaService.listarTodos();
     }
 
-    public Secretaria actualizarSecretaria(Long id, String nombre, String apellido, Integer dni) {
-        Secretaria secretariaExistente = secretariaService.buscarPorId(id);
-
-        secretariaExistente.setNombre(nombre);
-        secretariaExistente.setApellido(apellido);
-        secretariaExistente.setDni(dni);
-
-        return secretariaService.actualizar(secretariaExistente);
+    public Secretaria actualizarSecretaria(SecretariaEdicion edicion) {
+        return secretariaService.actualizar(edicion);
     }
 
     public boolean eliminarSecretaria(Long id) {

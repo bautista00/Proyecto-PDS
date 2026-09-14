@@ -46,28 +46,22 @@ final class PersistenciaTurno {
                             OdontologoRepository odontologoRepository,
                             SecretariaRepository secretariaRepository) {
         TurnoRepository repository = new TurnoRepository();
-        long maxId = 0;
 
         for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
             try {
-                Long id = cargarDesdeLinea(
+                cargarDesdeLinea(
                         linea,
                         pacienteRepository,
                         odontologoRepository,
                         secretariaRepository,
                         repository);
-                if (id != null && id > maxId) {
-                    maxId = id;
-                }
             } catch (RuntimeException excepcion) {
                 System.err.println("Turno ignorado, linea invalida: " + linea);
             }
         }
-
-        Turno.setContadorId(maxId);
         return repository;
     }
 
@@ -85,15 +79,15 @@ final class PersistenciaTurno {
             return null;
         }
 
-        Turno.setContadorId(id - 1);
-        Turno turno = new Turno(
+        Turno turno = Turno.rehidratar(
+                id,
                 paciente,
                 odontologo,
                 secretaria,
                 LocalDate.parse(campos.get(4)),
                 LocalTime.parse(campos.get(5)),
-                campos.get(6));
-        turno.setEstado(EstadoTurno.valueOf(campos.get(7)));
+                campos.get(6),
+                EstadoTurno.valueOf(campos.get(7)));
         turno.vincularConActores();
         turnoRepository.guardar(turno);
         return id;

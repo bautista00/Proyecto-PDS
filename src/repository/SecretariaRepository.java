@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SecretariaRepository implements IRepository<Secretaria> {
+public class SecretariaRepository implements ISecretariaRepository {
 
     private Map<Long, Secretaria> secretarias;
 

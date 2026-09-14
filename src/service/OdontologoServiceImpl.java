@@ -1,28 +1,33 @@
 package service;
 
+import dto.OdontologoEdicion;
+import dto.OdontologoRegistro;
 import entity.Odontologo;
+import entity.OdontologoFactory;
 import exception.DatoInvalidoException;
 import exception.OdontologoNoEncontradoException;
-import repository.OdontologoRepository;
+import repository.IOdontologoRepository;
 
 import java.util.List;
 
-public class OdontologoServiceImpl implements IService<Odontologo> {
+public class OdontologoServiceImpl implements OdontologoService {
 
-    private OdontologoRepository odontologoRepository;
+    private final IOdontologoRepository odontologoRepository;
 
-    public OdontologoServiceImpl(OdontologoRepository odontologoRepository) {
+    public OdontologoServiceImpl(IOdontologoRepository odontologoRepository) {
         this.odontologoRepository = odontologoRepository;
     }
 
     @Override
-    public Odontologo registrar(Odontologo odontologo) {
-        validarOdontologo(odontologo);
-
-        if (odontologoRepository.existeMatricula(odontologo.getMatricula())) {
-            throw new DatoInvalidoException("Ya existe un odontologo con la matricula " + odontologo.getMatricula() + ".");
+    public Odontologo registrar(OdontologoRegistro datos) {
+        validarDatos(datos);
+        if (odontologoRepository.existeMatricula(datos.getMatricula())) {
+            throw new DatoInvalidoException(
+                    "Ya existe un odontologo con la matricula " + datos.getMatricula() + ".");
         }
-
+        Odontologo odontologo = OdontologoFactory.crear(
+                datos.getEspecialidad(), datos.getNombre(), datos.getApellido(),
+                datos.getDni(), datos.getMatricula());
         odontologoRepository.guardar(odontologo);
         return odontologo;
     }
@@ -30,23 +35,21 @@ public class OdontologoServiceImpl implements IService<Odontologo> {
     @Override
     public Odontologo buscarPorId(Long id) {
         ValidacionesClinica.validarIdOdontologoPositivo(id);
-
         Odontologo odontologo = odontologoRepository.buscarPorId(id);
         if (odontologo == null) {
             throw new OdontologoNoEncontradoException("No existe un odontologo con ID " + id + ".");
         }
-
         return odontologo;
     }
 
+    @Override
     public Odontologo buscarPorMatricula(String matricula) {
         ValidacionesClinica.validarMatriculaNoVacia(matricula);
-
         Odontologo odontologo = odontologoRepository.buscarPorMatricula(matricula);
         if (odontologo == null) {
-            throw new OdontologoNoEncontradoException("No existe un odontologo con matricula " + matricula + ".");
+            throw new OdontologoNoEncontradoException(
+                    "No existe un odontologo con matricula " + matricula + ".");
         }
-
         return odontologo;
     }
 
@@ -56,51 +59,52 @@ public class OdontologoServiceImpl implements IService<Odontologo> {
     }
 
     @Override
-    public Odontologo actualizar(Odontologo odontologo) {
-        validarOdontologo(odontologo);
-
-        Odontologo odontologoExistente = odontologoRepository.buscarPorId(odontologo.getId());
-        if (odontologoExistente == null) {
-            throw new OdontologoNoEncontradoException("No existe un odontologo con ID " + odontologo.getId() + ".");
+    public Odontologo actualizar(OdontologoEdicion edicion) {
+        if (edicion == null) {
+            throw new DatoInvalidoException("Los datos de edicion del odontologo no pueden ser nulos.");
+        }
+        OdontologoRegistro datos = edicion.getDatos();
+        validarDatos(datos);
+        Odontologo odontologo = buscarPorId(edicion.getIdOdontologo());
+        if (odontologo.getEspecialidad() != datos.getEspecialidad()) {
+            throw new DatoInvalidoException("La especialidad de un odontologo no puede modificarse.");
+        }
+        Odontologo mismaMatricula = odontologoRepository.buscarPorMatricula(datos.getMatricula());
+        if (mismaMatricula != null && !mismaMatricula.getId().equals(odontologo.getId())) {
+            throw new DatoInvalidoException(
+                    "Ya existe otro odontologo con la matricula " + datos.getMatricula() + ".");
         }
 
-        Odontologo odontologoConMismaMatricula = odontologoRepository.buscarPorMatricula(odontologo.getMatricula());
-        if (odontologoConMismaMatricula != null && !odontologoConMismaMatricula.getId().equals(odontologo.getId())) {
-            throw new DatoInvalidoException("Ya existe otro odontologo con la matricula " + odontologo.getMatricula() + ".");
-        }
-
+        odontologo.actualizarDatos(
+                datos.getNombre(), datos.getApellido(), datos.getDni(), datos.getMatricula());
         odontologoRepository.actualizar(odontologo);
         return odontologo;
     }
 
     @Override
     public boolean eliminar(Long id) {
-        ValidacionesClinica.validarIdOdontologoPositivo(id);
-
-        Odontologo odontologo = odontologoRepository.buscarPorId(id);
-        if (odontologo == null) {
-            throw new OdontologoNoEncontradoException("No existe un odontologo con ID " + id + ".");
-        }
-
-        if (odontologo.tieneTurnosFuturos()) {
+        Odontologo odontologo = buscarPorId(id);
+        if (odontologo.tieneTurnos()) {
             throw new DatoInvalidoException(
-                    "No se puede eliminar el odontologo porque tiene turnos a futuro. " +
-                    "Cancele o complete esos turnos antes de eliminarlo.");
+                    "No se puede eliminar el odontologo porque posee turnos asociados. " +
+                    "El historial clinico debe conservarse.");
         }
-
         odontologoRepository.eliminar(id);
         return true;
     }
 
-    private void validarOdontologo(Odontologo odontologo) {
-        if (odontologo == null) {
-            throw new DatoInvalidoException("El odontologo no puede ser nulo.");
+    private void validarDatos(OdontologoRegistro datos) {
+        if (datos == null) {
+            throw new DatoInvalidoException("Los datos del odontologo no pueden ser nulos.");
         }
-        ValidacionesClinica.validarNombreNoVacio(odontologo.getNombre());
-        ValidacionesClinica.validarNombreSoloLetras(odontologo.getNombre());
-        ValidacionesClinica.validarApellidoNoVacio(odontologo.getApellido());
-        ValidacionesClinica.validarApellidoSoloLetras(odontologo.getApellido());
-        ValidacionesClinica.validarDniPositivo(odontologo.getDni());
-        ValidacionesClinica.validarMatriculaNoVacia(odontologo.getMatricula());
+        ValidacionesClinica.validarNombreNoVacio(datos.getNombre());
+        ValidacionesClinica.validarNombreSoloLetras(datos.getNombre());
+        ValidacionesClinica.validarApellidoNoVacio(datos.getApellido());
+        ValidacionesClinica.validarApellidoSoloLetras(datos.getApellido());
+        ValidacionesClinica.validarDniPositivo(datos.getDni());
+        ValidacionesClinica.validarMatriculaNoVacia(datos.getMatricula());
+        if (datos.getEspecialidad() == null) {
+            throw new DatoInvalidoException("La especialidad no puede ser nula.");
+        }
     }
 }

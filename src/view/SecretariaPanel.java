@@ -1,6 +1,8 @@
 package view;
 
 import controller.SecretariaController;
+import dto.SecretariaEdicion;
+import dto.SecretariaRegistro;
 import entity.Secretaria;
 import exception.ClinicaException;
 
@@ -128,12 +130,13 @@ public class SecretariaPanel extends JPanel {
             String nombre   = txtNombre.getText().trim();
             String apellido = txtApellido.getText().trim();
             Integer dni     = Integer.parseInt(txtDni.getText().trim());
+            SecretariaRegistro datos = new SecretariaRegistro(nombre, apellido, dni);
 
             if (idSeleccionado == null) {
-                controller.registrarSecretaria(nombre, apellido, dni);
+                controller.registrarSecretaria(datos);
                 JOptionPane.showMessageDialog(this, "Secretaria registrada correctamente.");
             } else {
-                controller.actualizarSecretaria(idSeleccionado, nombre, apellido, dni);
+                controller.actualizarSecretaria(new SecretariaEdicion(idSeleccionado, datos));
                 JOptionPane.showMessageDialog(this, "Secretaria actualizada correctamente.");
             }
             limpiarFormulario();

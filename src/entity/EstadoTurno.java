@@ -6,7 +6,11 @@ public enum EstadoTurno {
     CANCELADO,
     COMPLETADO;
 
-    public boolean estaActivo() {
+    public boolean ocupaAgenda() {
         return this == PENDIENTE || this == CONFIRMADO;
+    }
+
+    public boolean estaActivo() {
+        return ocupaAgenda();
     }
 }

@@ -1,20 +1,22 @@
 package controller;
 
+import dto.OdontologoEdicion;
+import dto.OdontologoRegistro;
 import entity.Odontologo;
-import service.OdontologoServiceImpl;
+import service.OdontologoService;
 
 import java.util.List;
 
 public class OdontologoController {
 
-    private OdontologoServiceImpl odontologoService;
+    private final OdontologoService odontologoService;
 
-    public OdontologoController(OdontologoServiceImpl odontologoService) {
+    public OdontologoController(OdontologoService odontologoService) {
         this.odontologoService = odontologoService;
     }
 
-    public Odontologo registrarOdontologo(Odontologo odontologo) {
-        return odontologoService.registrar(odontologo);
+    public Odontologo registrarOdontologo(OdontologoRegistro datos) {
+        return odontologoService.registrar(datos);
     }
 
     public Odontologo buscarOdontologoPorId(Long id) {
@@ -29,20 +31,8 @@ public class OdontologoController {
         return odontologoService.listarTodos();
     }
 
-    public Odontologo actualizarOdontologo(Long id,
-                                           String nombre,
-                                           String apellido,
-                                           Integer dni,
-                                           String matricula) {
-
-        Odontologo odontologoExistente = odontologoService.buscarPorId(id);
-
-        odontologoExistente.setNombre(nombre);
-        odontologoExistente.setApellido(apellido);
-        odontologoExistente.setDni(dni);
-        odontologoExistente.setMatricula(matricula);
-
-        return odontologoService.actualizar(odontologoExistente);
+    public Odontologo actualizarOdontologo(OdontologoEdicion edicion) {
+        return odontologoService.actualizar(edicion);
     }
 
     public boolean eliminarOdontologo(Long id) {

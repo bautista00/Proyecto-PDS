@@ -8,11 +8,7 @@ public class Turno implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static Long contadorId = 0L;
-
-    public static void setContadorId(Long id) {
-        contadorId = id;
-    }
+    private static long contadorId = 0L;
 
     private Long id;
     private Paciente paciente;
@@ -25,18 +21,46 @@ public class Turno implements Serializable {
 
     public Turno(Paciente paciente, Odontologo odontologo, Secretaria secretaria,
                  LocalDate fecha, LocalTime hora, String motivoConsulta) {
-        this.id = generarId();
+        this(siguienteId(), paciente, odontologo, secretaria, fecha, hora, motivoConsulta, EstadoTurno.PENDIENTE);
+    }
+
+    private Turno(Long id,
+                  Paciente paciente,
+                  Odontologo odontologo,
+                  Secretaria secretaria,
+                  LocalDate fecha,
+                  LocalTime hora,
+                  String motivoConsulta,
+                  EstadoTurno estado) {
+        validar(id, paciente, odontologo, secretaria, fecha, hora, motivoConsulta, estado);
+        this.id = id;
         this.paciente = paciente;
         this.odontologo = odontologo;
         this.secretaria = secretaria;
         this.fecha = fecha;
         this.hora = hora;
         this.motivoConsulta = motivoConsulta;
-        this.estado = EstadoTurno.PENDIENTE;
+        this.estado = estado;
+        registrarIdExistente(id);
     }
 
-    private static Long generarId() {
+    public static Turno rehidratar(Long id,
+                                   Paciente paciente,
+                                   Odontologo odontologo,
+                                   Secretaria secretaria,
+                                   LocalDate fecha,
+                                   LocalTime hora,
+                                   String motivoConsulta,
+                                   EstadoTurno estado) {
+        return new Turno(id, paciente, odontologo, secretaria, fecha, hora, motivoConsulta, estado);
+    }
+
+    private static synchronized Long siguienteId() {
         return ++contadorId;
+    }
+
+    private static synchronized void registrarIdExistente(Long id) {
+        contadorId = Math.max(contadorId, id);
     }
 
     public Long getId() {
@@ -115,24 +139,12 @@ public class Turno implements Serializable {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
     public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
     public String getMotivoConsulta() {
         return motivoConsulta;
-    }
-
-    public void setMotivoConsulta(String motivoConsulta) {
-        this.motivoConsulta = motivoConsulta;
     }
 
     public EstadoTurno getEstado() {
@@ -146,8 +158,60 @@ public class Turno implements Serializable {
         return !fecha.isBefore(fechaReferencia) && estado.estaActivo();
     }
 
-    public void setEstado(EstadoTurno estado) {
+    public boolean ocupaAgenda() {
+        return estado.ocupaAgenda();
+    }
+
+    public Double calcularMonto() {
+        return paciente.calcularMonto(odontologo);
+    }
+
+    public void actualizar(Odontologo nuevoOdontologo,
+                           Secretaria nuevaSecretaria,
+                           LocalDate nuevaFecha,
+                           LocalTime nuevaHora,
+                           String nuevoMotivo,
+                           EstadoTurno nuevoEstado) {
+        validar(id, paciente, nuevoOdontologo, nuevaSecretaria,
+                nuevaFecha, nuevaHora, nuevoMotivo, nuevoEstado);
+        cambiarOdontologo(nuevoOdontologo);
+        cambiarSecretaria(nuevaSecretaria);
+        this.fecha = nuevaFecha;
+        this.hora = nuevaHora;
+        this.motivoConsulta = nuevoMotivo;
+        this.estado = nuevoEstado;
+    }
+
+    public void cambiarEstado(EstadoTurno estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado del turno no puede ser nulo.");
+        }
         this.estado = estado;
+    }
+
+    private void validar(Long id,
+                         Paciente paciente,
+                         Odontologo odontologo,
+                         Secretaria secretaria,
+                         LocalDate fecha,
+                         LocalTime hora,
+                         String motivoConsulta,
+                         EstadoTurno estado) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El ID del turno debe ser positivo.");
+        }
+        if (paciente == null || odontologo == null || secretaria == null) {
+            throw new IllegalArgumentException("El turno debe tener paciente, odontologo y secretaria.");
+        }
+        if (fecha == null || hora == null) {
+            throw new IllegalArgumentException("La fecha y la hora del turno son obligatorias.");
+        }
+        if (motivoConsulta == null || motivoConsulta.trim().isEmpty()) {
+            throw new IllegalArgumentException("El motivo de consulta no puede estar vacio.");
+        }
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado del turno no puede ser nulo.");
+        }
     }
 
     @Override

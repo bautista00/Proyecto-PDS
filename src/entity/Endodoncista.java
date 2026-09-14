@@ -10,6 +10,10 @@ public class Endodoncista extends Odontologo {
         super(nombre, apellido, dni, matricula, EspecialidadOdontologica.ENDODONCIA);
     }
 
+    Endodoncista(Long id, String nombre, String apellido, Integer dni, String matricula) {
+        super(id, nombre, apellido, dni, matricula, EspecialidadOdontologica.ENDODONCIA);
+    }
+
     @Override
     public Double getTarifaBase() {
         return TARIFA_BASE;

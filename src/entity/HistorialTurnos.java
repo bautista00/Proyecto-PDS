@@ -25,6 +25,10 @@ final class HistorialTurnos implements Serializable {
         return tieneTurnosActivosDesde(LocalDate.now());
     }
 
+    boolean tieneTurnos() {
+        return !turnos.isEmpty();
+    }
+
     private boolean tieneTurnosActivosDesde(LocalDate fechaReferencia) {
         if (fechaReferencia == null) {
             throw new IllegalArgumentException("La fecha de referencia no puede ser nula.");

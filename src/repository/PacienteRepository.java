@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PacienteRepository implements IRepository<Paciente> {
+public class PacienteRepository implements IPacienteRepository {
 
     private Map<Long, Paciente> pacientes;
 

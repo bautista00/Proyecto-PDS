@@ -10,10 +10,14 @@ import repository.PacienteRepository;
 import repository.SecretariaRepository;
 import repository.TurnoRepository;
 import service.Facturador;
+import service.DisponibilidadTurnos;
 import service.OdontologoServiceImpl;
 import service.PacienteServiceImpl;
 import service.SecretariaServiceImpl;
+import service.TurnoConsultaService;
+import service.TurnoResolutor;
 import service.TurnoServiceImpl;
+import service.TurnoValidador;
 
 public class DependenciasClinica {
 
@@ -41,12 +45,24 @@ public class DependenciasClinica {
         PacienteServiceImpl pacienteService = new PacienteServiceImpl(pacienteRepository);
         OdontologoServiceImpl odontologoService = new OdontologoServiceImpl(odontologoRepository);
         SecretariaServiceImpl secretariaService = new SecretariaServiceImpl(secretariaRepository);
-        TurnoServiceImpl turnoService = new TurnoServiceImpl(
+        Facturador facturador = new Facturador();
+        TurnoValidador turnoValidador = new TurnoValidador();
+        TurnoResolutor turnoResolutor = new TurnoResolutor(
                 turnoRepository,
                 pacienteRepository,
                 odontologoRepository,
-                secretariaRepository,
-                new Facturador());
+                secretariaRepository);
+        DisponibilidadTurnos disponibilidadTurnos = new DisponibilidadTurnos(turnoRepository);
+        TurnoConsultaService turnoConsultaService = new TurnoConsultaService(
+                turnoRepository,
+                turnoResolutor,
+                facturador);
+        TurnoServiceImpl turnoService = new TurnoServiceImpl(
+                turnoRepository,
+                turnoValidador,
+                turnoResolutor,
+                disponibilidadTurnos,
+                turnoConsultaService);
 
         pacienteController = new PacienteController(pacienteService);
         odontologoController = new OdontologoController(odontologoService);

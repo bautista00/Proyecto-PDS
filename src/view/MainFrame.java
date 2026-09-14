@@ -1,6 +1,9 @@
 package view;
 
-import config.DependenciasClinica;
+import controller.OdontologoController;
+import controller.PacienteController;
+import controller.SecretariaController;
+import controller.TurnoController;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -8,20 +11,24 @@ import java.awt.event.WindowEvent;
 
 public class MainFrame extends JFrame {
 
-    private final DependenciasClinica dependencias;
+    private final Runnable guardarDatos;
     private final TurnoPanel panelTurnos;
 
-    public MainFrame(DependenciasClinica dependencias) {
-        this.dependencias = dependencias;
+    public MainFrame(PacienteController pacienteController,
+                     OdontologoController odontologoController,
+                     SecretariaController secretariaController,
+                     TurnoController turnoController,
+                     Runnable guardarDatos) {
+        this.guardarDatos = guardarDatos;
 
-        PacientePanel panelPacientes = new PacientePanel(dependencias.getPacienteController());
-        OdontologoPanel panelOdontologos = new OdontologoPanel(dependencias.getOdontologoController());
-        SecretariaPanel panelSecretarias = new SecretariaPanel(dependencias.getSecretariaController());
+        PacientePanel panelPacientes = new PacientePanel(pacienteController);
+        OdontologoPanel panelOdontologos = new OdontologoPanel(odontologoController);
+        SecretariaPanel panelSecretarias = new SecretariaPanel(secretariaController);
         this.panelTurnos = new TurnoPanel(
-                dependencias.getTurnoController(),
-                dependencias.getPacienteController(),
-                dependencias.getOdontologoController(),
-                dependencias.getSecretariaController());
+                turnoController,
+                pacienteController,
+                odontologoController,
+                secretariaController);
 
         configurarVentana(panelPacientes, panelOdontologos, panelSecretarias);
     }
@@ -66,7 +73,7 @@ public class MainFrame extends JFrame {
                         JOptionPane.YES_NO_CANCEL_OPTION
                 );
                 if (opcion == JOptionPane.YES_OPTION) {
-                    dependencias.guardarDatos();
+                    guardarDatos.run();
                     dispose();
                 } else if (opcion == JOptionPane.NO_OPTION) {
                     dispose();

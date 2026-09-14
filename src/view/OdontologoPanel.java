@@ -1,9 +1,10 @@
 package view;
 
 import controller.OdontologoController;
+import dto.OdontologoEdicion;
+import dto.OdontologoRegistro;
 import entity.EspecialidadOdontologica;
 import entity.Odontologo;
-import entity.OdontologoFactory;
 import exception.ClinicaException;
 
 import javax.swing.*;
@@ -151,20 +152,16 @@ public class OdontologoPanel extends JPanel {
             String apellido = txtApellido.getText().trim();
             Integer dni     = Integer.parseInt(txtDni.getText().trim());
             String matricula = txtMatricula.getText().trim();
+            EspecialidadOdontologica especialidad =
+                    (EspecialidadOdontologica) cboEspecialidad.getSelectedItem();
+            OdontologoRegistro datos =
+                    new OdontologoRegistro(nombre, apellido, dni, matricula, especialidad);
 
             if (idSeleccionado == null) {
-                EspecialidadOdontologica especialidad =
-                        (EspecialidadOdontologica) cboEspecialidad.getSelectedItem();
-                Odontologo nuevo = OdontologoFactory.crear(
-                        especialidad,
-                        nombre,
-                        apellido,
-                        dni,
-                        matricula);
-                controller.registrarOdontologo(nuevo);
+                controller.registrarOdontologo(datos);
                 JOptionPane.showMessageDialog(this, "Odontólogo registrado correctamente.");
             } else {
-                controller.actualizarOdontologo(idSeleccionado, nombre, apellido, dni, matricula);
+                controller.actualizarOdontologo(new OdontologoEdicion(idSeleccionado, datos));
                 JOptionPane.showMessageDialog(this, "Odontólogo actualizado correctamente.");
             }
             limpiarFormulario();
