@@ -151,13 +151,6 @@ public class Turno implements Serializable {
         return estado;
     }
 
-    public boolean estaActivoDesde(LocalDate fechaReferencia) {
-        if (fechaReferencia == null) {
-            throw new IllegalArgumentException("La fecha de referencia no puede ser nula.");
-        }
-        return !fecha.isBefore(fechaReferencia) && estado.estaActivo();
-    }
-
     public boolean ocupaAgenda() {
         return estado.ocupaAgenda();
     }

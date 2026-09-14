@@ -10,7 +10,4 @@ public enum EstadoTurno {
         return this == PENDIENTE || this == CONFIRMADO;
     }
 
-    public boolean estaActivo() {
-        return ocupaAgenda();
-    }
 }

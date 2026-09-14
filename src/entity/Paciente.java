@@ -113,10 +113,6 @@ public class Paciente extends Persona implements Comparable<Paciente> {
         return cobertura.calcularMonto(odontologo);
     }
 
-    public boolean tieneTurnosFuturos() {
-        return historialPaciente.tieneTurnosFuturos();
-    }
-
     public boolean tieneTurnos() {
         return historialPaciente.tieneTurnos();
     }

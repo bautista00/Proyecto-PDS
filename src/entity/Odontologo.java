@@ -51,10 +51,6 @@ public abstract class Odontologo extends Persona {
         this.matricula = matricula;
     }
 
-    public boolean tieneTurnosFuturos() {
-        return historialOdontologo.tieneTurnosFuturos();
-    }
-
     public boolean tieneTurnos() {
         return historialOdontologo.tieneTurnos();
     }
