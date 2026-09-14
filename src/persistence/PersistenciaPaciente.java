@@ -9,6 +9,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// Clase para manejar la persistencia de los pacientes en un archivo de texto.
+// Se encarga de guardar y cargar los pacientes desde un archivo,
+//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  y la clase FormatoLinea para unir y parsear los campos de cada paciente.
+
+
+
 final class PersistenciaPaciente {
 
     private static final String RUTA = "datos/pacientes.txt";

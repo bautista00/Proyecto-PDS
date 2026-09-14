@@ -7,6 +7,9 @@ import service.OdontologoService;
 
 import java.util.List;
 
+//Controller para manejar las operaciones relacionadas con los odontólogos.
+// No se encarga de la lógica de negocio, sino que delega las operaciones al servicio correspondiente.
+
 public class OdontologoController {
 
     private final OdontologoService odontologoService;

@@ -8,6 +8,12 @@ import repository.ITurnoRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+// Clase que se encarga de consultar turnos y sus detalles, incluyendo la búsqueda por diferentes criterios y 
+// el cálculo del monto de un turno.    
+// Utiliza TurnoResolutor para obtener los detalles de los turnos, pacientes, odontólogos y secretarias.
+// Utiliza Facturador para calcular el monto de un turno.
+
+
 public class TurnoConsultaService {
 
     private final ITurnoRepository turnoRepository;

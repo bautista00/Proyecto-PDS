@@ -2,6 +2,11 @@ package service;
 
 import exception.DatoInvalidoException;
 
+
+// Catálogo de validaciones primitivas reutilizables: IDs y números positivos,
+// texto no vacío, solo letras. No contiene reglas de negocio.
+// Las reglas propias del turno (fecha, hora, estado, odontólogo habilitado) viven en TurnoValidador.
+ 
 public class ValidacionesClinica {
 
     private static final String SOLO_LETRAS_REGEX = "[A-Za-záéíóúÁÉÍÓÚñÑ ]+";

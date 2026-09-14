@@ -1,5 +1,8 @@
 package dto;
 
+
+// DTO para la edición de un paciente.
+
 public class PacienteEdicion {
 
     private final Long idPaciente;

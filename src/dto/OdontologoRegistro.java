@@ -2,6 +2,9 @@ package dto;
 
 import entity.EspecialidadOdontologica;
 
+ //DTO para el registro de un odontólogo.
+  
+
 public class OdontologoRegistro {
 
     private final String nombre;

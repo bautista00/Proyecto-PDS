@@ -3,6 +3,8 @@ package dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// DTO para el registro de un turno.
+
 public class TurnoRegistro {
 
     private Long idPaciente;

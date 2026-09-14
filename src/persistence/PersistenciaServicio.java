@@ -5,6 +5,16 @@ import repository.PacienteRepository;
 import repository.SecretariaRepository;
 import repository.TurnoRepository;
 
+
+// Clase para manejar la persistencia de los datos de la aplicación.
+// Se encarga de guardar y cargar los datos desde archivos de texto,
+//  utilizando las clases PersistenciaPaciente, PersistenciaOdontologo, PersistenciaSecretaria 
+// y PersistenciaTurno para cada tipo de entidad.
+// Esta clase actúa como un servicio de persistencia, coordinando la lectura 
+// y escritura de los datos de todas las entidades.
+
+
+
 public class PersistenciaServicio {
 
     private final PersistenciaPaciente persistenciaPaciente;

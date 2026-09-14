@@ -3,6 +3,15 @@ package persistence;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+// Clase para manejar el formato de las líneas en los archivos de texto.
+// Se encarga de unir campos en una línea y de parsear líneas en campos,
+//  manejando correctamente los caracteres especiales y el separador.
+// Es final class para evitar que sea extendida, ya que su funcionalidad es específica y 
+// no debería ser modificada mediante herencia.
+
 final class FormatoLinea {
 
     private static final String SEPARADOR = ";";

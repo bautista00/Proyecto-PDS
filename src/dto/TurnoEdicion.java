@@ -5,6 +5,8 @@ import entity.EstadoTurno;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// DTO para la edición de un turno.
+
 public class TurnoEdicion {
 
     private Long idTurno;

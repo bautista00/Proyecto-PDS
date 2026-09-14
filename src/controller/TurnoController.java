@@ -9,6 +9,10 @@ import service.TurnoService;
 import java.time.LocalDate;
 import java.util.List;
 
+
+//Controller para manejar las operaciones relacionadas con los turnos.
+// No se encarga de la lógica de negocio, sino que delega las operaciones al servicio correspondiente.
+
 public class TurnoController {
 
     private final TurnoService turnoService;

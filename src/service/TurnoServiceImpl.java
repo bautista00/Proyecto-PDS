@@ -13,6 +13,12 @@ import repository.ITurnoRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+
+// Implementación del servicio de turnos, que se encarga de manejar la lógica de negocio relacionada con los turnos.
+// Utiliza un repositorio de turnos para almacenar y recuperar los turnos, un validador de turnos para validar los datos de los turnos,
+// un resolutor de turnos para obtener los detalles de los turnos, un validador de disponibilidad de turnos para verificar si un turno está disponible, 
+// y un servicio de consulta de turnos para buscar y recuperar información sobre los turnos.
+
 public class TurnoServiceImpl implements TurnoService {
 
     private final ITurnoRepository turnoRepository;

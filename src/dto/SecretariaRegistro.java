@@ -1,5 +1,7 @@
 package dto;
 
+// DTO para el registro de una secretaria.
+
 public class SecretariaRegistro {
 
     private final String nombre;

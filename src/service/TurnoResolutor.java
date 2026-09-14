@@ -12,6 +12,11 @@ import repository.IPacienteRepository;
 import repository.ISecretariaRepository;
 import repository.ITurnoRepository;
 
+
+ // Resuelve IDs a entidades (paciente, odontólogo, secretaria, turno) y falla si no existen.
+ // Se extrajo para que TurnoServiceImpl y TurnoConsultaService compartan esa búsqueda
+ // en vez de duplicarla.
+ 
 public class TurnoResolutor {
 
     private final ITurnoRepository turnoRepository;

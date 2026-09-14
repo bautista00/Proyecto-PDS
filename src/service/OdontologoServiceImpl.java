@@ -10,6 +10,14 @@ import repository.IOdontologoRepository;
 
 import java.util.List;
 
+
+// Implementación del servicio de odontólogos, que se encarga de la lógica de negocio relacionada con los odontólogos.
+// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar odontólogos, validando los datos 
+// y las reglas de negocio correspondientes.
+// Utiliza el repositorio de odontólogos para persistir y recuperar los datos de los odontólogos.
+// Utiliza ValidacionesClinica para validar los datos de los odontólogos antes de registrarlos o actualizarlos.
+
+
 public class OdontologoServiceImpl implements OdontologoService {
 
     private final IOdontologoRepository odontologoRepository;

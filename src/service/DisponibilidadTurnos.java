@@ -6,6 +6,10 @@ import repository.ITurnoRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+
+// Clase que valida la disponibilidad de turnos para un odontólogo en una fecha y hora específica.
+// Sera utilizada luego en el servicio de TurnoServiceImpl para validar la disponibilidad antes de crear o actualizar un turno.
+
 public class DisponibilidadTurnos {
 
     private final ITurnoRepository turnoRepository;

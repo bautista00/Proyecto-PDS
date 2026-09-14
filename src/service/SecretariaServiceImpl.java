@@ -8,6 +8,14 @@ import repository.ISecretariaRepository;
 
 import java.util.List;
 
+
+// Implementación del servicio de secretarias, que se encarga de la lógica de negocio relacionada con las secretarias.
+// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar secretarias, validando los datos y 
+// las reglas de negocio correspondientes.
+// Utiliza el repositorio de secretarias para persistir y recuperar los datos de las secretarias.
+// Utiliza ValidacionesClinica para validar los datos de las secretarias antes de registrarlas o actualizarlas.
+
+
 public class SecretariaServiceImpl implements SecretariaService {
 
     private final ISecretariaRepository secretariaRepository;

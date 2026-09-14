@@ -7,6 +7,9 @@ import service.PacienteService;
 
 import java.util.List;
 
+//Controller para manejar las operaciones relacionadas con los Pacientes.
+// No se encarga de la lógica de negocio, sino que delega las operaciones al servicio correspondiente.
+
 public class PacienteController {
 
     private final PacienteService pacienteService;

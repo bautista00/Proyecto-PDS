@@ -15,6 +15,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// Clase para manejar la persistencia de los turnos en un archivo de texto.
+// Se encarga de guardar y cargar los turnos desde un archivo,
+//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  y la clase FormatoLinea para unir y parsear los campos de cada turno.
+
+
 final class PersistenciaTurno {
 
     private static final String RUTA = "datos/turnos.txt";

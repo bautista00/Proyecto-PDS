@@ -1,5 +1,8 @@
 package dto;
 
+
+// DTO para la edición de una secretaria.
+
 public class SecretariaEdicion {
 
     private final Long idSecretaria;

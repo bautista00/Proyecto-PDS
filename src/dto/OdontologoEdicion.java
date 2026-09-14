@@ -1,5 +1,7 @@
 package dto;
 
+
+//DTO para la edición de un odontólogo.
 public class OdontologoEdicion {
 
     private final Long idOdontologo;

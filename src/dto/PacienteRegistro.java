@@ -2,6 +2,8 @@ package dto;
 
 import entity.CoberturaPaciente;
 
+// DTO para el registro de un paciente.
+
 public class PacienteRegistro {
 
     private String nombre;

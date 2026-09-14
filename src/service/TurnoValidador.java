@@ -7,6 +7,10 @@ import exception.DatoInvalidoException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// Clase que se encarga de validar los datos de un turno, incluyendo la fecha, hora, motivo de consulta, estado
+//  y odontólogo asociado al turno.
+// Se utiliza en el servicio de TurnoServiceImpl para validar los datos antes de registrar o editar un turno.
+
 public class TurnoValidador {
 
     public void validarDatos(LocalDate fecha,

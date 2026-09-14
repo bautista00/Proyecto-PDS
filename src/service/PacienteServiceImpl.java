@@ -11,6 +11,13 @@ import repository.IPacienteRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Implementación del servicio de pacientes, que se encarga de la lógica de negocio relacionada con los pacientes.
+// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar pacientes, validando los datos y
+//  las reglas de negocio correspondientes.
+// Utiliza el repositorio de pacientes para persistir y recuperar los datos de los pacientes.
+// Utiliza ValidacionesClinica para validar los datos de los pacientes antes de registrarlos o actualizarlos.
+
+
 public class PacienteServiceImpl implements PacienteService {
 
     private final IPacienteRepository pacienteRepository;
