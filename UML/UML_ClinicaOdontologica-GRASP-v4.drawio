@@ -4,7 +4,7 @@
       <root>
         <mxCell id="p1-r" />
         <mxCell id="p1-l" parent="p1-r" />
-        <mxCell id="p1-t1" parent="p1-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;1 · Arquitectura general&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Dependencias entre paquetes: siempre hacia abajo, nunca al revés&lt;/font&gt;" vertex="1">
+        <mxCell id="p1-t1" parent="p1-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;1 · Arquitectura general&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="1724" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p1-view" parent="p1-l" style="shape=folder;tabWidth=86;tabHeight=20;tabPosition=left;spacingTop=22;rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=top;fontFamily=Arial;fontSize=16;fontColor=#24364B;strokeColor=#627B90;fillColor=#EEF2FD;strokeWidth=1.3;" value="&lt;b&gt;view&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;Swing · MainFrame y paneles&lt;/font&gt;" vertex="1">
@@ -68,11 +68,11 @@
     </mxGraphModel>
   </diagram>
   <diagram id="p2" name="2 · Dominio · jerarquía de personas">
-    <mxGraphModel dx="2725" dy="2118" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2640" pageHeight="1080" background="#FFFFFF" math="0" shadow="0">
+    <mxGraphModel dx="1453" dy="1129" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2640" pageHeight="1080" background="#FFFFFF" math="0" shadow="0">
       <root>
         <mxCell id="p2-r" />
         <mxCell id="p2-l" parent="p2-r" />
-        <mxCell id="p2-t1" parent="p2-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;2 · Dominio · jerarquía de personas&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Herencia, tipos de valor y enumerados del paquete entity&lt;/font&gt;" vertex="1">
+        <mxCell id="p2-t1" parent="p2-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;2 · Dominio · jerarquía de personas&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2544" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p2-persona" parent="p2-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#EDF6F1;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;entity&lt;/font&gt;&lt;br&gt;&lt;b&gt;&lt;i&gt;Persona&lt;/i&gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;- id: Long&lt;br&gt;- nombre: String&lt;br&gt;- apellido: String&lt;br&gt;- dni: Integer&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ getNombreCompleto(): String&lt;br&gt;# actualizarDatosPersonales(…): void {final}" vertex="1">
@@ -196,7 +196,7 @@
       <root>
         <mxCell id="p3-r" />
         <mxCell id="p3-l" parent="p3-r" />
-        <mxCell id="p3-t1" parent="p3-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;3 · Dominio · Turno, participantes e historiales&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Una sola asociación por actor, materializada con HistorialTurnos&lt;/font&gt;" vertex="1">
+        <mxCell id="p3-t1" parent="p3-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;3 · Dominio · Turno, participantes e historiales&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="1964" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p3-pac" parent="p3-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#EDF6F1;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;entity&lt;/font&gt;&lt;br&gt;&lt;b&gt;Paciente&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;- historialPaciente: HistorialTurnos&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ tieneTurnos(): boolean" vertex="1">
@@ -294,7 +294,7 @@
       <root>
         <mxCell id="p4-r" />
         <mxCell id="p4-l" parent="p4-r" />
-        <mxCell id="p4-t1" parent="p4-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;4 · Controller → Service → Repository&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;El mismo esqueleto repetido en los cuatro módulos; cada carril es independiente&lt;/font&gt;" vertex="1">
+        <mxCell id="p4-t1" parent="p4-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;4 · Controller → Service → Repository&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2584" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p4-pacc" parent="p4-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#EAF0FC;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;controller&lt;/font&gt;&lt;br&gt;&lt;b&gt;PacienteController&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ registrarPaciente(d: PacienteRegistro): Paciente&lt;br&gt;+ buscarPacientePorDni(dni: Integer): Paciente&lt;br&gt;+ listarPacientesOrdenadosPorApellido(): List&amp;lt;Paciente&amp;gt;&lt;br&gt;+ actualizarPaciente(e: PacienteEdicion): Paciente&lt;br&gt;+ eliminarPaciente(id: Long): boolean" vertex="1">
@@ -413,7 +413,7 @@
       <root>
         <mxCell id="p5-r" />
         <mxCell id="p5-l" parent="p5-r" />
-        <mxCell id="p5-t1" parent="p5-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;5 · Contratos Repository&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;IRepository&amp;lt;T&amp;gt; genérico + un contrato específico por entidad&lt;/font&gt;" vertex="1">
+        <mxCell id="p5-t1" parent="p5-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;5 · Contratos Repository&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2524" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p5-irep" parent="p5-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#E9F4F6;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;repository&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;&amp;#171;interface&amp;#187;&lt;/font&gt;&lt;br&gt;&lt;b&gt;IRepository&amp;lt;T&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ guardar(entidad: T): void&lt;br&gt;+ buscarPorId(id: Long): T&lt;br&gt;+ listarTodos(): List&amp;lt;T&amp;gt;&lt;br&gt;+ actualizar(entidad: T): void&lt;br&gt;+ eliminar(id: Long): void" vertex="1">
@@ -500,7 +500,7 @@
       <root>
         <mxCell id="p6-r" />
         <mxCell id="p6-l" parent="p6-r" />
-        <mxCell id="p6-t1" parent="p6-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;6 · TurnoServiceImpl y sus colaboradores&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;El caso más complejo: la lógica de Turno repartida en cinco clases cohesivas&lt;/font&gt;" vertex="1">
+        <mxCell id="p6-t1" parent="p6-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;6 · TurnoServiceImpl y sus colaboradores&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2164" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p6-ctl" parent="p6-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#EAF0FC;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;controller&lt;/font&gt;&lt;br&gt;&lt;b&gt;TurnoController&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ registrarTurno(d: TurnoRegistro): Turno&lt;br&gt;+ actualizarTurno(d: TurnoEdicion): Turno&lt;br&gt;+ cambiarEstadoTurno(…): Turno&lt;br&gt;+ calcularMontoTurno(id: Long): Double&lt;br&gt;+ eliminarTurno(id: Long): boolean&lt;br&gt;+ listarTurnos(): List&amp;lt;Turno&amp;gt;" vertex="1">
@@ -587,7 +587,7 @@
       <root>
         <mxCell id="p7-r" />
         <mxCell id="p7-l" parent="p7-r" />
-        <mxCell id="p7-t1" parent="p7-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;7 · Los colaboradores y de quién dependen&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;TurnoResolutor concentra el acceso a los cuatro repositorios (Indirección)&lt;/font&gt;" vertex="1">
+        <mxCell id="p7-t1" parent="p7-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;7 · Los colaboradores y de quién dependen&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2364" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p7-tip" parent="p7-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#E9F4F6;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;repository&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;&amp;#171;interface&amp;#187;&lt;/font&gt;&lt;br&gt;&lt;b&gt;IPacienteRepository&lt;/b&gt;" vertex="1">
@@ -682,7 +682,7 @@
       <root>
         <mxCell id="p8-r" />
         <mxCell id="p8-l" parent="p8-r" />
-        <mxCell id="p8-t1" parent="p8-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;8 · DTO · contratos de alta y edición&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Datos planos que viajan view → controller → service, sin entidades&lt;/font&gt;" vertex="1">
+        <mxCell id="p8-t1" parent="p8-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;8 · DTO · contratos de alta y edición&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="1964" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p8-pr" parent="p8-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#FFF5E7;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;dto&lt;/font&gt;&lt;br&gt;&lt;b&gt;PacienteRegistro&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;- nombre: String&lt;br&gt;- apellido: String&lt;br&gt;- dni: Integer&lt;br&gt;- email: String&lt;br&gt;- calle: String&lt;br&gt;- numero: Integer&lt;br&gt;- localidad: String&lt;br&gt;- provincia: String&lt;br&gt;- cobertura: CoberturaPaciente" vertex="1">
@@ -726,7 +726,7 @@
       <root>
         <mxCell id="p9-r" />
         <mxCell id="p9-l" parent="p9-r" />
-        <mxCell id="p9-t1" parent="p9-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;9 · View · paneles Swing y sus dependencias&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;La UI sólo conoce controllers y DTO; nunca services ni repositories&lt;/font&gt;" vertex="1">
+        <mxCell id="p9-t1" parent="p9-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;9 · View · paneles Swing y sus dependencias&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2444" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p9-mf" parent="p9-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#EEF2FD;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;view&lt;/font&gt;&lt;br&gt;&lt;b&gt;MainFrame&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;- guardarDatos: Runnable {readOnly}&lt;br&gt;- panelTurnos: TurnoPanel {readOnly}" vertex="1">
@@ -872,7 +872,7 @@
       <root>
         <mxCell id="p10-r" />
         <mxCell id="p10-l" parent="p10-r" />
-        <mxCell id="p10-t1" parent="p10-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;10 · Persistencia · archivos y reconstrucción&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Un guardador por entidad; la reconstrucción vuelve por la puerta de cada clase&lt;/font&gt;" vertex="1">
+        <mxCell id="p10-t1" parent="p10-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;10 · Persistencia · archivos y reconstrucción&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2404" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p10-srv" parent="p10-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#F2F3F5;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;persistence&lt;/font&gt;&lt;br&gt;&lt;b&gt;PersistenciaServicio&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;- persistenciaPaciente: PersistenciaPaciente&lt;br&gt;- persistenciaOdontologo: PersistenciaOdontologo&lt;br&gt;- persistenciaSecretaria: PersistenciaSecretaria&lt;br&gt;- persistenciaTurno: PersistenciaTurno&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ guardar(pacRepo, odoRepo, secRepo, turRepo): void&lt;br&gt;+ cargarPacientes(): PacienteRepository&lt;br&gt;+ cargarOdontologos(): OdontologoRepository&lt;br&gt;+ cargarSecretarias(): SecretariaRepository&lt;br&gt;+ cargarTurnos(pacRepo, odoRepo, secRepo): TurnoRepository" vertex="1">
@@ -1010,7 +1010,7 @@
       <root>
         <mxCell id="p11-r" />
         <mxCell id="p11-l" parent="p11-r" />
-        <mxCell id="p11-t1" parent="p11-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;11 · Validaciones, creación y excepciones&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Una sola clase de validaciones, una jerarquía de errores propia del dominio&lt;/font&gt;" vertex="1">
+        <mxCell id="p11-t1" parent="p11-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;11 · Validaciones, creación y excepciones&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2324" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p11-val" parent="p11-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#F0EDFA;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;service  ·  {leaf}&lt;/font&gt;&lt;br&gt;&lt;b&gt;ValidacionesClinica&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ validarIdPacientePositivo(id: Long): void {static}&lt;br&gt;+ validarDniPositivo(dni: Integer): void {static}&lt;br&gt;+ validarNombreSoloLetras(n: String): void {static}&lt;br&gt;+ validarEmailNoVacio(e: String): void {static}&lt;br&gt;+ validarMotivoConsultaNoVacio(m): void {static}&lt;br&gt;+ validarLongPositivo(v: Long, msg): void {static}&lt;br&gt;… 19 métodos estáticos en total" vertex="1">
@@ -1165,7 +1165,7 @@
       <root>
         <mxCell id="p12-r" />
         <mxCell id="p12-l" parent="p12-r" />
-        <mxCell id="p12-t1" parent="p12-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;12 · Ensamblado · Main y DependenciasClinica&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot; color=&quot;#7C8FA5&quot;&gt;Quién construye a quién: un único punto de cableado (Inyección de dependencias)&lt;/font&gt;" vertex="1">
+        <mxCell id="p12-t1" parent="p12-l" style="text;html=1;align=left;verticalAlign=top;fontFamily=Arial;fontSize=26;fontColor=#24364B;strokeColor=none;fillColor=none;" value="&lt;b&gt;12 · Ensamblado · Main y DependenciasClinica&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="58" width="2404" x="48" y="26" as="geometry" />
         </mxCell>
         <mxCell id="p12-main" parent="p12-l" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;overflow=hidden;fontFamily=Arial;fontSize=12;fontColor=#24364B;strokeColor=#627B90;fillColor=#F4F4F4;strokeWidth=1.3;" value="&lt;font style=&quot;font-size:11px&quot; color=&quot;#7C8FA5&quot;&gt;(raiz)&lt;/font&gt;&lt;br&gt;&lt;b&gt;Main&lt;/b&gt;&lt;br&gt;&lt;hr size=&quot;1&quot; style=&quot;border-color:#627B90&quot;&gt;&lt;br&gt;+ main(args: String[]): void {static}" vertex="1">
