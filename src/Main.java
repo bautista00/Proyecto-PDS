@@ -1,5 +1,6 @@
 import config.DependenciasClinica;
 import view.MainFrame;
+import view.ManejadorCierreAplicacion;
 
 import javax.swing.*;
 
@@ -13,7 +14,9 @@ public class Main {
                     dependencias.getOdontologoController(),
                     dependencias.getSecretariaController(),
                     dependencias.getTurnoController(),
-                    dependencias::guardarDatos);
+                    dependencias.getCoberturas(),
+                    dependencias.getEspecialidades());
+            new ManejadorCierreAplicacion(frame, dependencias::guardarDatos).configurar();
             frame.setVisible(true);
         });
     }

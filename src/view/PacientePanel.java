@@ -7,188 +7,69 @@ import entity.CoberturaPaciente;
 import entity.Paciente;
 import exception.ClinicaException;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
 
-// Pantalla de ABM de pacientes: tabla, formulario y botones de alta, baja,
-// modificación y búsqueda por DNI.
-// Solo arma la interfaz y muestra resultados: toda la lógica la delega en PacienteController.
 public class PacientePanel extends JPanel {
 
     private final PacienteController controller;
-
-    private JTable tabla;
-    private DefaultTableModel modeloTabla;
-
-    private JTextField txtNombre, txtApellido, txtDni, txtEmail;
-    private JTextField txtCalle, txtNumero, txtLocalidad, txtProvincia;
-    private JComboBox<CoberturaPaciente> cboCobertura;
-    private JTextField txtBuscarDni;
+    private final PacienteFormularioPanel formularioPanel;
+    private final PacienteTablaPanel tablaPanel;
     private Long idSeleccionado;
 
-    public PacientePanel(PacienteController controller) {
+    public PacientePanel(PacienteController controller, List<CoberturaPaciente> coberturas) {
         this.controller = controller;
+        formularioPanel = new PacienteFormularioPanel(coberturas);
+        tablaPanel = new PacienteTablaPanel(this::cargarPacienteSeleccionado);
+
         setLayout(new BorderLayout(5, 5));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(crearPanelTabla(), BorderLayout.NORTH);
-        add(crearPanelFormulario(), BorderLayout.CENTER);
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(tablaPanel, BorderLayout.NORTH);
+        add(formularioPanel, BorderLayout.CENTER);
         add(crearPanelBotones(), BorderLayout.SOUTH);
         cargarTabla();
     }
 
-    private JScrollPane crearPanelTabla() {
-        String[] columnas = {"ID", "Nombre", "Apellido", "DNI", "Email", "Cobertura"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int fila, int columna) { return false; }
-        };
-        tabla = new JTable(modeloTabla);
-        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabla.getTableHeader().setReorderingAllowed(false);
-        tabla.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) { cargarFilaSeleccionada(); }
-        });
-        JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setPreferredSize(new Dimension(0, 220));
-        return scroll;
-    }
-
-    private JPanel crearPanelFormulario() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Datos del Paciente"));
-        GridBagConstraints gbc = crearRestriccionesFormulario();
-
-        inicializarCamposFormulario();
-
-        gbc.gridy = 0;
-        agregarCampo(panel, gbc, 0, "Nombre:", txtNombre);
-        agregarCampo(panel, gbc, 2, "Apellido:", txtApellido);
-
-        gbc.gridy = 1;
-        agregarCampo(panel, gbc, 0, "DNI:", txtDni);
-        agregarCampo(panel, gbc, 2, "Email:", txtEmail);
-
-        gbc.gridy = 2;
-        agregarCampo(panel, gbc, 0, "Calle:", txtCalle);
-        agregarCampo(panel, gbc, 2, "Número:", txtNumero);
-
-        gbc.gridy = 3;
-        agregarCampo(panel, gbc, 0, "Localidad:", txtLocalidad);
-        agregarCampo(panel, gbc, 2, "Provincia:", txtProvincia);
-
-        gbc.gridy = 4;
-        agregarCampo(panel, gbc, 0, "Cobertura:", cboCobertura);
-        agregarCampo(panel, gbc, 2, "Buscar por DNI:", txtBuscarDni);
-        return panel;
-    }
-
-    private GridBagConstraints crearRestriccionesFormulario() {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 6, 4, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        return gbc;
-    }
-
-    private void inicializarCamposFormulario() {
-        txtNombre = new JTextField(15);
-        txtApellido = new JTextField(15);
-        txtDni = new JTextField(10);
-        txtEmail = new JTextField(20);
-        txtCalle = new JTextField(15);
-        txtNumero = new JTextField(5);
-        txtLocalidad = new JTextField(15);
-        txtProvincia = new JTextField(15);
-        cboCobertura = new JComboBox<>(CoberturaPaciente.values());
-        txtBuscarDni = new JTextField(10);
-    }
-
-    private void agregarCampo(JPanel panel,
-                              GridBagConstraints gbc,
-                              int columna,
-                              String etiqueta,
-                              Component componente) {
-        gbc.gridx = columna;
-        gbc.weightx = 0;
-        panel.add(new JLabel(etiqueta), gbc);
-        gbc.gridx = columna + 1;
-        gbc.weightx = 1;
-        panel.add(componente, gbc);
-    }
-
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
-
-        JButton btnNuevo = new JButton("Nuevo");
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnEliminar = new JButton("Eliminar");
-        JButton btnBuscar = new JButton("Buscar DNI");
-        JButton btnLimpiar = new JButton("Limpiar");
-
-        btnNuevo.addActionListener(e -> limpiarFormulario());
-        btnGuardar.addActionListener(e -> guardar());
-        btnEliminar.addActionListener(e -> eliminar());
-        btnBuscar.addActionListener(e -> buscarPorDni());
-        btnLimpiar.addActionListener(e -> limpiarFormulario());
-
-        panel.add(btnNuevo);
-        panel.add(btnGuardar);
-        panel.add(btnEliminar);
-        panel.add(btnBuscar);
-        panel.add(btnLimpiar);
+        agregarBoton(panel, "Nuevo", this::limpiar);
+        agregarBoton(panel, "Guardar", this::guardar);
+        agregarBoton(panel, "Eliminar", this::eliminar);
+        agregarBoton(panel, "Buscar DNI", this::buscarPorDni);
+        agregarBoton(panel, "Limpiar", this::limpiar);
         return panel;
+    }
+
+    private void agregarBoton(JPanel panel, String texto, Runnable accion) {
+        JButton boton = new JButton(texto);
+        boton.addActionListener(evento -> accion.run());
+        panel.add(boton);
     }
 
     private void cargarTabla() {
-        modeloTabla.setRowCount(0);
         try {
-            List<Paciente> pacientes = controller.listarPacientesOrdenadosPorApellido();
-            for (Paciente paciente : pacientes) {
-                modeloTabla.addRow(new Object[]{
-                        paciente.getId(),
-                        paciente.getNombre(),
-                        paciente.getApellido(),
-                        paciente.getDni(),
-                        paciente.getEmail(),
-                        paciente.getCobertura().getDescripcion()
-                });
-            }
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            tablaPanel.cargar(controller.listarPacientesOrdenadosPorApellido());
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
-    private void cargarFilaSeleccionada() {
-        int fila = tabla.getSelectedRow();
-        if (fila < 0) return;
-        idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
+    private void cargarPacienteSeleccionado(Long idPaciente) {
+        idSeleccionado = idPaciente;
         try {
-            PacienteRegistro datos = controller.buscarDatosPacientePorId(idSeleccionado);
-            cargarDatosEnFormulario(datos);
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            formularioPanel.cargar(controller.buscarDatosPacientePorId(idPaciente));
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
-    }
-
-    private void cargarDatosEnFormulario(PacienteRegistro datos) {
-        txtNombre.setText(datos.getNombre());
-        txtApellido.setText(datos.getApellido());
-        txtDni.setText(String.valueOf(datos.getDni()));
-        txtEmail.setText(datos.getEmail());
-        txtCalle.setText(datos.getCalle());
-        txtNumero.setText(String.valueOf(datos.getNumero()));
-        txtLocalidad.setText(datos.getLocalidad());
-        txtProvincia.setText(datos.getProvincia());
-        cboCobertura.setSelectedItem(datos.getCobertura());
     }
 
     private void guardar() {
         try {
-            PacienteRegistro datos = leerDatosFormulario();
+            PacienteRegistro datos = formularioPanel.leerRegistro();
             if (idSeleccionado == null) {
                 controller.registrarPaciente(datos);
                 JOptionPane.showMessageDialog(this, "Paciente registrado correctamente.");
@@ -196,27 +77,13 @@ public class PacientePanel extends JPanel {
                 controller.actualizarPaciente(new PacienteEdicion(idSeleccionado, datos));
                 JOptionPane.showMessageDialog(this, "Paciente actualizado correctamente.");
             }
-            limpiarFormulario();
+            limpiar();
             cargarTabla();
-        } catch (NumberFormatException e) {
-            mostrarError("DNI y Número deben ser valores numéricos válidos.");
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+        } catch (NumberFormatException excepcion) {
+            mostrarError("DNI y numero de domicilio deben ser valores numericos validos.");
+        } catch (ClinicaException | IllegalArgumentException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
-    }
-
-    private PacienteRegistro leerDatosFormulario() {
-        PacienteRegistro datos = new PacienteRegistro();
-        datos.setNombre(txtNombre.getText().trim());
-        datos.setApellido(txtApellido.getText().trim());
-        datos.setDni(Integer.parseInt(txtDni.getText().trim()));
-        datos.setEmail(txtEmail.getText().trim());
-        datos.setCalle(txtCalle.getText().trim());
-        datos.setNumero(Integer.parseInt(txtNumero.getText().trim()));
-        datos.setLocalidad(txtLocalidad.getText().trim());
-        datos.setProvincia(txtProvincia.getText().trim());
-        datos.setCobertura((CoberturaPaciente) cboCobertura.getSelectedItem());
-        return datos;
     }
 
     private void eliminar() {
@@ -224,57 +91,40 @@ public class PacientePanel extends JPanel {
             mostrarError("Seleccione un paciente de la tabla.");
             return;
         }
-        int confirmacion = JOptionPane.showConfirmDialog(this,
-                "¿Eliminar el paciente seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, "¿Eliminar el paciente seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 controller.eliminarPaciente(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Paciente eliminado correctamente.");
-                limpiarFormulario();
+                limpiar();
                 cargarTabla();
-            } catch (ClinicaException e) {
-                mostrarError(e.getMessage());
+            } catch (ClinicaException excepcion) {
+                mostrarError(excepcion.getMessage());
             }
         }
     }
 
     private void buscarPorDni() {
-        String texto = txtBuscarDni.getText().trim();
+        String texto = formularioPanel.getDniBusqueda();
         if (texto.isEmpty()) {
             mostrarError("Ingrese un DNI para buscar.");
             return;
         }
         try {
-            Integer dni = Integer.parseInt(texto);
-            Paciente paciente = controller.buscarPacientePorDni(dni);
-            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                if (modeloTabla.getValueAt(i, 3).equals(paciente.getDni())) {
-                    tabla.setRowSelectionInterval(i, i);
-                    tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
-                    break;
-                }
-            }
-            cargarFilaSeleccionada();
-        } catch (NumberFormatException e) {
-            mostrarError("El DNI debe ser un número.");
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            Paciente paciente = controller.buscarPacientePorDni(Integer.parseInt(texto));
+            tablaPanel.seleccionarPorDni(paciente.getDni());
+        } catch (NumberFormatException excepcion) {
+            mostrarError("El DNI debe ser un numero.");
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
-    private void limpiarFormulario() {
+    private void limpiar() {
         idSeleccionado = null;
-        txtNombre.setText("");
-        txtApellido.setText("");
-        txtDni.setText("");
-        txtEmail.setText("");
-        txtCalle.setText("");
-        txtNumero.setText("");
-        txtLocalidad.setText("");
-        txtProvincia.setText("");
-        cboCobertura.setSelectedItem(CoberturaPaciente.PARTICULAR);
-        txtBuscarDni.setText("");
-        tabla.clearSelection();
+        formularioPanel.limpiar();
+        tablaPanel.limpiarSeleccion();
     }
 
     private void mostrarError(String mensaje) {

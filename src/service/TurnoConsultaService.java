@@ -3,29 +3,24 @@ package service;
 import entity.EstadoTurno;
 import entity.Turno;
 import exception.DatoInvalidoException;
-import repository.ITurnoRepository;
+import repository.ConsultaTurnosRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-// Clase que se encarga de consultar turnos y sus detalles, incluyendo la búsqueda por diferentes criterios y 
-// el cálculo del monto de un turno.    
-// Utiliza TurnoResolutor para obtener los detalles de los turnos, pacientes, odontólogos y secretarias.
-// Utiliza Facturador para calcular el monto de un turno.
+// Servicio dedicado a consultar turnos por los distintos criterios disponibles.
+// La facturacion se resuelve por separado en FacturacionTurnoService.
 
 
-public class TurnoConsultaService {
+public class TurnoConsultaService implements ConsultaTurnos {
 
-    private final ITurnoRepository turnoRepository;
+    private final ConsultaTurnosRepository turnoRepository;
     private final TurnoResolutor turnoResolutor;
-    private final Facturador facturador;
 
-    public TurnoConsultaService(ITurnoRepository turnoRepository,
-                                TurnoResolutor turnoResolutor,
-                                Facturador facturador) {
+    public TurnoConsultaService(ConsultaTurnosRepository turnoRepository,
+                                TurnoResolutor turnoResolutor) {
         this.turnoRepository = turnoRepository;
         this.turnoResolutor = turnoResolutor;
-        this.facturador = facturador;
     }
 
     public Turno buscarPorId(Long idTurno) {
@@ -74,7 +69,4 @@ public class TurnoConsultaService {
         return turnoRepository.buscarPorOdontologoYPaciente(idOdontologo, idPaciente);
     }
 
-    public Double calcularMonto(Long idTurno) {
-        return facturador.calcularMonto(turnoResolutor.obtenerTurno(idTurno));
-    }
 }

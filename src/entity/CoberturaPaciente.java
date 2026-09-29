@@ -1,35 +1,13 @@
 package entity;
 
-public enum CoberturaPaciente {
-    PARTICULAR("Particular") {
-        @Override
-        public Double calcularMonto(Odontologo odontologo) {
-            return odontologo.getTarifaBase();
-        }
-    },
-    OBRA_SOCIAL("Obra Social") {
-        @Override
-        public Double calcularMonto(Odontologo odontologo) {
-            return COPAGO_OBRA_SOCIAL;
-        }
-    };
+public interface CoberturaPaciente {
 
-    private static final Double COPAGO_OBRA_SOCIAL = 10000.0;
+    CoberturaPaciente PARTICULAR = new CoberturaParticular();
+    CoberturaPaciente OBRA_SOCIAL = new CoberturaObraSocial();
 
-    private final String descripcion;
+    String getCodigo();
 
-    CoberturaPaciente(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    String getDescripcion();
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public abstract Double calcularMonto(Odontologo odontologo);
-
-    @Override
-    public String toString() {
-        return descripcion;
-    }
+    Double calcularMonto(Odontologo odontologo);
 }

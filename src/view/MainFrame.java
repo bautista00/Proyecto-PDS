@@ -4,31 +4,28 @@ import controller.OdontologoController;
 import controller.PacienteController;
 import controller.SecretariaController;
 import controller.TurnoController;
+import entity.CoberturaPaciente;
+import entity.EspecialidadOdontologica;
 
-import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import java.util.List;
 
-// Ventana principal de la aplicación: arma las cuatro pestañas (Pacientes, Odontólogos,
-// Secretarias y Turnos) y las muestra.
-// Recibe los controllers ya construidos desde DependenciasClinica, no los crea.
-// Al cerrar la ventana pregunta si se quieren guardar los datos antes de salir.
 public class MainFrame extends JFrame {
 
-    private final Runnable guardarDatos;
     private final TurnoPanel panelTurnos;
 
     public MainFrame(PacienteController pacienteController,
                      OdontologoController odontologoController,
                      SecretariaController secretariaController,
                      TurnoController turnoController,
-                     Runnable guardarDatos) {
-        this.guardarDatos = guardarDatos;
-
-        PacientePanel panelPacientes = new PacientePanel(pacienteController);
-        OdontologoPanel panelOdontologos = new OdontologoPanel(odontologoController);
+                     List<CoberturaPaciente> coberturas,
+                     List<EspecialidadOdontologica> especialidades) {
+        PacientePanel panelPacientes = new PacientePanel(pacienteController, coberturas);
+        OdontologoPanel panelOdontologos = new OdontologoPanel(
+                odontologoController, especialidades);
         SecretariaPanel panelSecretarias = new SecretariaPanel(secretariaController);
-        this.panelTurnos = new TurnoPanel(
+        panelTurnos = new TurnoPanel(
                 turnoController,
                 pacienteController,
                 odontologoController,
@@ -40,13 +37,11 @@ public class MainFrame extends JFrame {
     private void configurarVentana(PacientePanel panelPacientes,
                                     OdontologoPanel panelOdontologos,
                                     SecretariaPanel panelSecretarias) {
-        setTitle("Clínica Odontológica");
+        setTitle("Clinica Odontologica");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(950, 680);
         setLocationRelativeTo(null);
-
         add(crearPestanas(panelPacientes, panelOdontologos, panelSecretarias));
-        configurarGuardadoAlCerrar();
     }
 
     private JTabbedPane crearPestanas(PacientePanel panelPacientes,
@@ -54,35 +49,14 @@ public class MainFrame extends JFrame {
                                       SecretariaPanel panelSecretarias) {
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Pacientes", panelPacientes);
-        tabs.addTab("Odontólogos", panelOdontologos);
+        tabs.addTab("Odontologos", panelOdontologos);
         tabs.addTab("Secretarias", panelSecretarias);
         tabs.addTab("Turnos", panelTurnos);
-
-        tabs.addChangeListener(e -> {
+        tabs.addChangeListener(evento -> {
             if (tabs.getSelectedComponent() == panelTurnos) {
                 panelTurnos.actualizarCombos();
             }
         });
         return tabs;
-    }
-
-    private void configurarGuardadoAlCerrar() {
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                int opcion = JOptionPane.showConfirmDialog(
-                        MainFrame.this,
-                        "¿Desea guardar los datos antes de salir?",
-                        "Salir",
-                        JOptionPane.YES_NO_CANCEL_OPTION
-                );
-                if (opcion == JOptionPane.YES_OPTION) {
-                    guardarDatos.run();
-                    dispose();
-                } else if (opcion == JOptionPane.NO_OPTION) {
-                    dispose();
-                }
-            }
-        });
     }
 }

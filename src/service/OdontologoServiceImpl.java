@@ -21,9 +21,12 @@ import java.util.List;
 public class OdontologoServiceImpl implements OdontologoService {
 
     private final IOdontologoRepository odontologoRepository;
+    private final OdontologoFactory odontologoFactory;
 
-    public OdontologoServiceImpl(IOdontologoRepository odontologoRepository) {
+    public OdontologoServiceImpl(IOdontologoRepository odontologoRepository,
+                                 OdontologoFactory odontologoFactory) {
         this.odontologoRepository = odontologoRepository;
+        this.odontologoFactory = odontologoFactory;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class OdontologoServiceImpl implements OdontologoService {
             throw new DatoInvalidoException(
                     "Ya existe un odontologo con la matricula " + datos.getMatricula() + ".");
         }
-        Odontologo odontologo = OdontologoFactory.crear(
+        Odontologo odontologo = odontologoFactory.crear(
                 datos.getEspecialidad(), datos.getNombre(), datos.getApellido(),
                 datos.getDni(), datos.getMatricula());
         odontologoRepository.guardar(odontologo);
@@ -74,7 +77,7 @@ public class OdontologoServiceImpl implements OdontologoService {
         OdontologoRegistro datos = edicion.getDatos();
         validarDatos(datos);
         Odontologo odontologo = buscarPorId(edicion.getIdOdontologo());
-        if (odontologo.getEspecialidad() != datos.getEspecialidad()) {
+        if (!odontologo.getEspecialidad().equals(datos.getEspecialidad())) {
             throw new DatoInvalidoException("La especialidad de un odontologo no puede modificarse.");
         }
         Odontologo mismaMatricula = odontologoRepository.buscarPorMatricula(datos.getMatricula());

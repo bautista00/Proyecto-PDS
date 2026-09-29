@@ -5,10 +5,9 @@ import entity.Odontologo;
 import entity.Paciente;
 import entity.Secretaria;
 import entity.Turno;
-import repository.OdontologoRepository;
-import repository.PacienteRepository;
-import repository.SecretariaRepository;
-import repository.TurnoRepository;
+import repository.BuscadorPorId;
+import repository.RepositorioEscritura;
+import repository.RepositorioLectura;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +16,7 @@ import java.util.List;
 
 // Clase para manejar la persistencia de los turnos en un archivo de texto.
 // Se encarga de guardar y cargar los turnos desde un archivo,
-//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  utilizando la abstraccion AlmacenamientoLineas para leer y escribir,
 //  y la clase FormatoLinea para unir y parsear los campos de cada turno.
 
 
@@ -26,13 +25,13 @@ final class PersistenciaTurno {
     private static final String RUTA = "datos/turnos.txt";
     private static final String DESCRIPCION = "turnos";
 
-    private final ArchivoTexto archivoTexto;
+    private final AlmacenamientoLineas almacenamiento;
 
-    PersistenciaTurno(ArchivoTexto archivoTexto) {
-        this.archivoTexto = archivoTexto;
+    PersistenciaTurno(AlmacenamientoLineas almacenamiento) {
+        this.almacenamiento = almacenamiento;
     }
 
-    void guardar(TurnoRepository repository) {
+    void guardar(RepositorioLectura<Turno> repository) {
         List<String> lineas = new ArrayList<>();
         for (Turno turno : repository.listarTodos()) {
             lineas.add(FormatoLinea.unir(
@@ -45,15 +44,14 @@ final class PersistenciaTurno {
                     turno.getMotivoConsulta(),
                     turno.getEstado()));
         }
-        archivoTexto.escribirLineas(RUTA, DESCRIPCION, lineas);
+        almacenamiento.escribirLineas(RUTA, DESCRIPCION, lineas);
     }
 
-    TurnoRepository cargar(PacienteRepository pacienteRepository,
-                            OdontologoRepository odontologoRepository,
-                            SecretariaRepository secretariaRepository) {
-        TurnoRepository repository = new TurnoRepository();
-
-        for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
+    void cargar(BuscadorPorId<Paciente> pacienteRepository,
+                BuscadorPorId<Odontologo> odontologoRepository,
+                BuscadorPorId<Secretaria> secretariaRepository,
+                RepositorioEscritura<Turno> repository) {
+        for (String linea : almacenamiento.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
@@ -68,14 +66,13 @@ final class PersistenciaTurno {
                 System.err.println("Turno ignorado, linea invalida: " + linea);
             }
         }
-        return repository;
     }
 
     private Long cargarDesdeLinea(String linea,
-                                  PacienteRepository pacienteRepository,
-                                  OdontologoRepository odontologoRepository,
-                                  SecretariaRepository secretariaRepository,
-                                  TurnoRepository turnoRepository) {
+                                  BuscadorPorId<Paciente> pacienteRepository,
+                                  BuscadorPorId<Odontologo> odontologoRepository,
+                                  BuscadorPorId<Secretaria> secretariaRepository,
+                                  RepositorioEscritura<Turno> turnoRepository) {
         List<String> campos = FormatoLinea.parsear(linea);
         long id = Long.parseLong(campos.get(0));
         Paciente paciente = pacienteRepository.buscarPorId(Long.parseLong(campos.get(1)));

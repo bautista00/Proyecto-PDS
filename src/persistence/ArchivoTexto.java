@@ -16,9 +16,10 @@ import java.util.List;
 // Es final class para evitar que sea extendida, ya que su funcionalidad es específica y 
 // no debería ser modificada mediante herencia.
 
-final class ArchivoTexto {
+public final class ArchivoTexto implements AlmacenamientoLineas {
 
-    List<String> leerLineas(String ruta, String descripcion) {
+    @Override
+    public List<String> leerLineas(String ruta, String descripcion) {
         Path archivo = Path.of(ruta);
         if (!Files.exists(archivo)) {
             return Collections.emptyList();
@@ -32,7 +33,8 @@ final class ArchivoTexto {
         }
     }
 
-    void escribirLineas(String ruta, String descripcion, List<String> lineas) {
+    @Override
+    public void escribirLineas(String ruta, String descripcion, List<String> lineas) {
         Path archivo = Path.of(ruta);
         try {
             Path directorio = archivo.getParent();

@@ -1,9 +1,11 @@
 package persistence;
 
 import entity.CoberturaPaciente;
+import entity.CatalogoCoberturas;
 import entity.Domicilio;
 import entity.Paciente;
-import repository.PacienteRepository;
+import repository.RepositorioEscritura;
+import repository.RepositorioLectura;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.List;
 
 // Clase para manejar la persistencia de los pacientes en un archivo de texto.
 // Se encarga de guardar y cargar los pacientes desde un archivo,
-//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  utilizando la abstraccion AlmacenamientoLineas para leer y escribir,
 //  y la clase FormatoLinea para unir y parsear los campos de cada paciente.
 
 
@@ -22,13 +24,16 @@ final class PersistenciaPaciente {
     private static final String RUTA = "datos/pacientes.txt";
     private static final String DESCRIPCION = "pacientes";
 
-    private final ArchivoTexto archivoTexto;
+    private final AlmacenamientoLineas almacenamiento;
+    private final CatalogoCoberturas catalogoCoberturas;
 
-    PersistenciaPaciente(ArchivoTexto archivoTexto) {
-        this.archivoTexto = archivoTexto;
+    PersistenciaPaciente(AlmacenamientoLineas almacenamiento,
+                         CatalogoCoberturas catalogoCoberturas) {
+        this.almacenamiento = almacenamiento;
+        this.catalogoCoberturas = catalogoCoberturas;
     }
 
-    void guardar(PacienteRepository repository) {
+    void guardar(RepositorioLectura<Paciente> repository) {
         List<String> lineas = new ArrayList<>();
         for (Paciente paciente : repository.listarTodos()) {
             lineas.add(FormatoLinea.unir(
@@ -42,15 +47,13 @@ final class PersistenciaPaciente {
                     paciente.getNumeroDomicilio(),
                     paciente.getLocalidadDomicilio(),
                     paciente.getProvinciaDomicilio(),
-                    paciente.getCobertura().name()));
+                    paciente.getCobertura().getCodigo()));
         }
-        archivoTexto.escribirLineas(RUTA, DESCRIPCION, lineas);
+        almacenamiento.escribirLineas(RUTA, DESCRIPCION, lineas);
     }
 
-    PacienteRepository cargar() {
-        PacienteRepository repository = new PacienteRepository();
-
-        for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
+    void cargar(RepositorioEscritura<Paciente> repository) {
+        for (String linea : almacenamiento.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
@@ -60,10 +63,9 @@ final class PersistenciaPaciente {
                 System.err.println("Paciente ignorado, linea invalida: " + linea);
             }
         }
-        return repository;
     }
 
-    private void cargarDesdeLinea(String linea, PacienteRepository repository) {
+    private void cargarDesdeLinea(String linea, RepositorioEscritura<Paciente> repository) {
         List<String> campos = FormatoLinea.parsear(linea);
         long id = Long.parseLong(campos.get(0));
 
@@ -91,19 +93,11 @@ final class PersistenciaPaciente {
 
         String valorNormalizado = valor.trim();
         if ("true".equalsIgnoreCase(valorNormalizado)) {
-            return CoberturaPaciente.OBRA_SOCIAL;
+            return catalogoCoberturas.buscar("OBRA_SOCIAL");
         }
         if ("false".equalsIgnoreCase(valorNormalizado)) {
-            return CoberturaPaciente.PARTICULAR;
+            return catalogoCoberturas.buscar("PARTICULAR");
         }
-
-        for (CoberturaPaciente cobertura : CoberturaPaciente.values()) {
-            if (cobertura.name().equalsIgnoreCase(valorNormalizado)
-                    || cobertura.getDescripcion().equalsIgnoreCase(valorNormalizado)) {
-                return cobertura;
-            }
-        }
-
-        throw new IllegalArgumentException("Cobertura persistida desconocida: " + valor);
+        return catalogoCoberturas.buscar(valorNormalizado);
     }
 }

@@ -1,7 +1,7 @@
 package service;
 
 import exception.TurnoYaReservadoException;
-import repository.ITurnoRepository;
+import repository.VerificadorConflictosTurno;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,9 +12,9 @@ import java.time.LocalTime;
 
 public class DisponibilidadTurnos {
 
-    private final ITurnoRepository turnoRepository;
+    private final VerificadorConflictosTurno turnoRepository;
 
-    public DisponibilidadTurnos(ITurnoRepository turnoRepository) {
+    public DisponibilidadTurnos(VerificadorConflictosTurno turnoRepository) {
         this.turnoRepository = turnoRepository;
     }
 

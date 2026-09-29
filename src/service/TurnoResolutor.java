@@ -7,10 +7,7 @@ import entity.Turno;
 import exception.DatoInvalidoException;
 import exception.OdontologoNoEncontradoException;
 import exception.PacienteNoEncontradoException;
-import repository.IOdontologoRepository;
-import repository.IPacienteRepository;
-import repository.ISecretariaRepository;
-import repository.ITurnoRepository;
+import repository.BuscadorPorId;
 
 
  // Resuelve IDs a entidades (paciente, odontólogo, secretaria, turno) y falla si no existen.
@@ -19,15 +16,15 @@ import repository.ITurnoRepository;
  
 public class TurnoResolutor {
 
-    private final ITurnoRepository turnoRepository;
-    private final IPacienteRepository pacienteRepository;
-    private final IOdontologoRepository odontologoRepository;
-    private final ISecretariaRepository secretariaRepository;
+    private final BuscadorPorId<Turno> turnoRepository;
+    private final BuscadorPorId<Paciente> pacienteRepository;
+    private final BuscadorPorId<Odontologo> odontologoRepository;
+    private final BuscadorPorId<Secretaria> secretariaRepository;
 
-    public TurnoResolutor(ITurnoRepository turnoRepository,
-                          IPacienteRepository pacienteRepository,
-                          IOdontologoRepository odontologoRepository,
-                          ISecretariaRepository secretariaRepository) {
+    public TurnoResolutor(BuscadorPorId<Turno> turnoRepository,
+                          BuscadorPorId<Paciente> pacienteRepository,
+                          BuscadorPorId<Odontologo> odontologoRepository,
+                          BuscadorPorId<Secretaria> secretariaRepository) {
         this.turnoRepository = turnoRepository;
         this.pacienteRepository = pacienteRepository;
         this.odontologoRepository = odontologoRepository;

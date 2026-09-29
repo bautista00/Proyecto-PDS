@@ -3,7 +3,8 @@ package persistence;
 import entity.EspecialidadOdontologica;
 import entity.Odontologo;
 import entity.OdontologoFactory;
-import repository.OdontologoRepository;
+import repository.RepositorioEscritura;
+import repository.RepositorioLectura;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 
 // Clase para manejar la persistencia de los odontólogos en un archivo de texto.
 // Se encarga de guardar y cargar los odontólogos desde un archivo,
-//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  utilizando la abstraccion AlmacenamientoLineas para leer y escribir,
 //  y la clase FormatoLinea para unir y parsear los campos de cada odontólogo
 
 
@@ -20,13 +21,16 @@ final class PersistenciaOdontologo {
     private static final String RUTA = "datos/odontologos.txt";
     private static final String DESCRIPCION = "odontologos";
 
-    private final ArchivoTexto archivoTexto;
+    private final AlmacenamientoLineas almacenamiento;
+    private final OdontologoFactory odontologoFactory;
 
-    PersistenciaOdontologo(ArchivoTexto archivoTexto) {
-        this.archivoTexto = archivoTexto;
+    PersistenciaOdontologo(AlmacenamientoLineas almacenamiento,
+                           OdontologoFactory odontologoFactory) {
+        this.almacenamiento = almacenamiento;
+        this.odontologoFactory = odontologoFactory;
     }
 
-    void guardar(OdontologoRepository repository) {
+    void guardar(RepositorioLectura<Odontologo> repository) {
         List<String> lineas = new ArrayList<>();
         for (Odontologo odontologo : repository.listarTodos()) {
             lineas.add(FormatoLinea.unir(
@@ -35,15 +39,13 @@ final class PersistenciaOdontologo {
                     odontologo.getApellido(),
                     odontologo.getDni(),
                     odontologo.getMatricula(),
-                    odontologo.getEspecialidad().name()));
+                    odontologo.getEspecialidad().getCodigo()));
         }
-        archivoTexto.escribirLineas(RUTA, DESCRIPCION, lineas);
+        almacenamiento.escribirLineas(RUTA, DESCRIPCION, lineas);
     }
 
-    OdontologoRepository cargar() {
-        OdontologoRepository repository = new OdontologoRepository();
-
-        for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
+    void cargar(RepositorioEscritura<Odontologo> repository) {
+        for (String linea : almacenamiento.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
@@ -53,15 +55,14 @@ final class PersistenciaOdontologo {
                 System.err.println("Odontologo ignorado, linea invalida: " + linea);
             }
         }
-        return repository;
     }
 
-    private void cargarDesdeLinea(String linea, OdontologoRepository repository) {
+    private void cargarDesdeLinea(String linea, RepositorioEscritura<Odontologo> repository) {
         List<String> campos = FormatoLinea.parsear(linea);
         long id = Long.parseLong(campos.get(0));
 
         EspecialidadOdontologica especialidad = convertirEspecialidadPersistida(campos.get(5));
-        Odontologo odontologo = OdontologoFactory.rehidratar(
+        Odontologo odontologo = odontologoFactory.rehidratar(
                 id,
                 especialidad,
                 campos.get(1),
@@ -76,14 +77,6 @@ final class PersistenciaOdontologo {
             throw new IllegalArgumentException("La especialidad persistida no puede ser nula.");
         }
 
-        String valorNormalizado = valor.trim();
-        for (EspecialidadOdontologica especialidad : EspecialidadOdontologica.values()) {
-            if (especialidad.name().equalsIgnoreCase(valorNormalizado)
-                    || especialidad.getDescripcion().equalsIgnoreCase(valorNormalizado)) {
-                return especialidad;
-            }
-        }
-
-        throw new IllegalArgumentException("Especialidad persistida desconocida: " + valor);
+        return odontologoFactory.buscarEspecialidad(valor.trim());
     }
 }

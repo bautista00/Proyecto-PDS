@@ -6,7 +6,6 @@ import controller.SecretariaController;
 import controller.TurnoController;
 import dto.TurnoEdicion;
 import dto.TurnoRegistro;
-import entity.EstadoTurno;
 import entity.Odontologo;
 import entity.Paciente;
 import entity.Secretaria;
@@ -19,7 +18,6 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +60,13 @@ public class TurnoPanel extends JPanel {
     private JPanel crearPanelInferior() {
         JPanel panel = new JPanel(new GridLayout(2, 1, 4, 4));
         panel.add(crearAccionesPrincipales());
-        panel.add(new TurnoFiltrosPanel(
-                this::cargarTodos,
-                this::filtrarPorPaciente,
-                this::filtrarPorOdontologo,
-                this::filtrarPorSecretaria,
-                this::filtrarPorFechas,
-                this::filtrarPorEstado));
+        TurnoFiltroDialogos filtros = new TurnoFiltroDialogos(
+                this,
+                turnoController,
+                tablaPanel::cargar,
+                this::mostrarError,
+                this::cargarTodos);
+        panel.add(new TurnoFiltrosPanel(filtros.crearAcciones()));
         return panel;
     }
 
@@ -198,82 +196,6 @@ public class TurnoPanel extends JPanel {
         tablaPanel.cargar(turnoController.listarTurnos());
     }
 
-    private void filtrarPorPaciente() {
-        Long id = solicitarId("ID del Paciente:");
-        if (id != null) {
-            ejecutarFiltro(() -> turnoController.listarTurnosPorPaciente(id));
-        }
-    }
-
-    private void filtrarPorOdontologo() {
-        Long id = solicitarId("ID del Odontologo:");
-        if (id != null) {
-            ejecutarFiltro(() -> turnoController.listarTurnosPorOdontologo(id));
-        }
-    }
-
-    private void filtrarPorSecretaria() {
-        Long id = solicitarId("ID de la Secretaria:");
-        if (id != null) {
-            ejecutarFiltro(() -> turnoController.listarTurnosPorSecretaria(id));
-        }
-    }
-
-    private void filtrarPorEstado() {
-        EstadoTurno estado = (EstadoTurno) JOptionPane.showInputDialog(
-                this,
-                "Seleccione el estado a filtrar:",
-                "Filtrar por Estado",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                EstadoTurno.values(),
-                EstadoTurno.PENDIENTE);
-        if (estado != null) {
-            ejecutarFiltro(() -> turnoController.listarTurnosPorEstado(estado));
-        }
-    }
-
-    private void filtrarPorFechas() {
-        String desde = JOptionPane.showInputDialog(this, "Fecha desde (yyyy-MM-dd):");
-        if (desde == null || desde.trim().isEmpty()) {
-            return;
-        }
-        String hasta = JOptionPane.showInputDialog(this, "Fecha hasta (yyyy-MM-dd):");
-        if (hasta == null || hasta.trim().isEmpty()) {
-            return;
-        }
-        try {
-            LocalDate fechaDesde = LocalDate.parse(desde.trim());
-            LocalDate fechaHasta = LocalDate.parse(hasta.trim());
-            tablaPanel.cargar(turnoController.buscarTurnosPorRangoFechas(fechaDesde, fechaHasta));
-        } catch (DateTimeParseException excepcion) {
-            mostrarError("Formato de fecha invalido. Use yyyy-MM-dd.");
-        } catch (ClinicaException excepcion) {
-            mostrarError(excepcion.getMessage());
-        }
-    }
-
-    private Long solicitarId(String mensaje) {
-        String valor = JOptionPane.showInputDialog(this, mensaje);
-        if (valor == null || valor.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return Long.parseLong(valor.trim());
-        } catch (NumberFormatException excepcion) {
-            mostrarError("Ingrese un ID numerico.");
-            return null;
-        }
-    }
-
-    private void ejecutarFiltro(ConsultaTurnos consulta) {
-        try {
-            tablaPanel.cargar(consulta.ejecutar());
-        } catch (ClinicaException excepcion) {
-            mostrarError(excepcion.getMessage());
-        }
-    }
-
     private void limpiarFormulario() {
         idSeleccionado = null;
         formularioPanel.limpiar();
@@ -282,10 +204,5 @@ public class TurnoPanel extends JPanel {
 
     private void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    @FunctionalInterface
-    private interface ConsultaTurnos {
-        List<Turno> ejecutar();
     }
 }

@@ -3,30 +3,22 @@ package view;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
+import java.util.List;
 
-// Fila de botones para filtrar los turnos (por paciente, odontólogo, secretaria, fechas o estado).
-// Se extrajo de TurnoPanel para sacarle el armado de esos seis botones.
-// Recibe un Runnable por botón, así que no sabe qué hace cada filtro: solo los muestra y los dispara.
+// Muestra las acciones de filtro recibidas. El panel no necesita cambiar cuando se agrega
+// una nueva accion: construye sus botones recorriendo la coleccion registrada.
 final class TurnoFiltrosPanel extends JPanel {
 
-    TurnoFiltrosPanel(Runnable verTodos,
-                      Runnable porPaciente,
-                      Runnable porOdontologo,
-                      Runnable porSecretaria,
-                      Runnable porFechas,
-                      Runnable porEstado) {
+    TurnoFiltrosPanel(List<AccionFiltroTurno> acciones) {
         setLayout(new FlowLayout(FlowLayout.CENTER, 8, 4));
-        agregarBoton("Ver Todos", verTodos);
-        agregarBoton("Filtrar por Paciente", porPaciente);
-        agregarBoton("Filtrar por Odontologo", porOdontologo);
-        agregarBoton("Filtrar por Secretaria", porSecretaria);
-        agregarBoton("Filtrar por Fechas", porFechas);
-        agregarBoton("Filtrar por Estado", porEstado);
+        for (AccionFiltroTurno accion : acciones) {
+            agregarBoton(accion);
+        }
     }
 
-    private void agregarBoton(String texto, Runnable accion) {
-        JButton boton = new JButton(texto);
-        boton.addActionListener(evento -> accion.run());
+    private void agregarBoton(AccionFiltroTurno accion) {
+        JButton boton = new JButton(accion.getTexto());
+        boton.addActionListener(evento -> accion.ejecutar());
         add(boton);
     }
 }

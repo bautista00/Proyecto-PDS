@@ -1,7 +1,8 @@
 package persistence;
 
 import entity.Secretaria;
-import repository.SecretariaRepository;
+import repository.RepositorioEscritura;
+import repository.RepositorioLectura;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 
 // Clase para manejar la persistencia de las secretarias en un archivo de texto.
 // Se encarga de guardar y cargar las secretarias desde un archivo,
-//  utilizando la clase ArchivoTexto para la lectura y escritura de líneas,
+//  utilizando la abstraccion AlmacenamientoLineas para leer y escribir,
 //  y la clase FormatoLinea para unir y parsear los campos de cada secretaria.
 
 final class PersistenciaSecretaria {
@@ -17,13 +18,13 @@ final class PersistenciaSecretaria {
     private static final String RUTA = "datos/secretarias.txt";
     private static final String DESCRIPCION = "secretarias";
 
-    private final ArchivoTexto archivoTexto;
+    private final AlmacenamientoLineas almacenamiento;
 
-    PersistenciaSecretaria(ArchivoTexto archivoTexto) {
-        this.archivoTexto = archivoTexto;
+    PersistenciaSecretaria(AlmacenamientoLineas almacenamiento) {
+        this.almacenamiento = almacenamiento;
     }
 
-    void guardar(SecretariaRepository repository) {
+    void guardar(RepositorioLectura<Secretaria> repository) {
         List<String> lineas = new ArrayList<>();
         for (Secretaria secretaria : repository.listarTodos()) {
             lineas.add(FormatoLinea.unir(
@@ -32,13 +33,11 @@ final class PersistenciaSecretaria {
                     secretaria.getApellido(),
                     secretaria.getDni()));
         }
-        archivoTexto.escribirLineas(RUTA, DESCRIPCION, lineas);
+        almacenamiento.escribirLineas(RUTA, DESCRIPCION, lineas);
     }
 
-    SecretariaRepository cargar() {
-        SecretariaRepository repository = new SecretariaRepository();
-
-        for (String linea : archivoTexto.leerLineas(RUTA, DESCRIPCION)) {
+    void cargar(RepositorioEscritura<Secretaria> repository) {
+        for (String linea : almacenamiento.leerLineas(RUTA, DESCRIPCION)) {
             if (linea.trim().isEmpty()) {
                 continue;
             }
@@ -48,10 +47,9 @@ final class PersistenciaSecretaria {
                 System.err.println("Secretaria ignorada, linea invalida: " + linea);
             }
         }
-        return repository;
     }
 
-    private void cargarDesdeLinea(String linea, SecretariaRepository repository) {
+    private void cargarDesdeLinea(String linea, RepositorioEscritura<Secretaria> repository) {
         List<String> campos = FormatoLinea.parsear(linea);
         long id = Long.parseLong(campos.get(0));
 

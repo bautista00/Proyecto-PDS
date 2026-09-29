@@ -8,7 +8,7 @@ import entity.Paciente;
 import entity.Secretaria;
 import entity.Turno;
 import exception.DatoInvalidoException;
-import repository.ITurnoRepository;
+import repository.EscrituraTurnosRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,22 +21,25 @@ import java.util.List;
 
 public class TurnoServiceImpl implements TurnoService {
 
-    private final ITurnoRepository turnoRepository;
+    private final EscrituraTurnosRepository turnoRepository;
     private final TurnoValidador turnoValidador;
     private final TurnoResolutor turnoResolutor;
     private final DisponibilidadTurnos disponibilidadTurnos;
     private final TurnoConsultaService turnoConsultaService;
+    private final FacturacionTurnoService facturacionTurnoService;
 
-    public TurnoServiceImpl(ITurnoRepository turnoRepository,
+    public TurnoServiceImpl(EscrituraTurnosRepository turnoRepository,
                             TurnoValidador turnoValidador,
                             TurnoResolutor turnoResolutor,
                             DisponibilidadTurnos disponibilidadTurnos,
-                            TurnoConsultaService turnoConsultaService) {
+                            TurnoConsultaService turnoConsultaService,
+                            FacturacionTurnoService facturacionTurnoService) {
         this.turnoRepository = turnoRepository;
         this.turnoValidador = turnoValidador;
         this.turnoResolutor = turnoResolutor;
         this.disponibilidadTurnos = disponibilidadTurnos;
         this.turnoConsultaService = turnoConsultaService;
+        this.facturacionTurnoService = facturacionTurnoService;
     }
 
     @Override
@@ -158,7 +161,7 @@ public class TurnoServiceImpl implements TurnoService {
 
     @Override
     public Double calcularMonto(Long idTurno) {
-        return turnoConsultaService.calcularMonto(idTurno);
+        return facturacionTurnoService.calcularMonto(idTurno);
     }
 
     @Override

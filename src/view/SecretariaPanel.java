@@ -6,135 +6,68 @@ import dto.SecretariaRegistro;
 import entity.Secretaria;
 import exception.ClinicaException;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
-// Pantalla de ABM de secretarias: tabla, formulario y botones de alta, baja,
-// modificación y búsqueda por DNI.
-// Solo arma la interfaz y muestra resultados: toda la lógica la delega en SecretariaController.
 public class SecretariaPanel extends JPanel {
 
     private final SecretariaController controller;
-
-    private JTable tabla;
-    private DefaultTableModel modeloTabla;
-
-    private JTextField txtNombre, txtApellido, txtDni, txtBuscarDni;
+    private final SecretariaFormularioPanel formularioPanel;
+    private final SecretariaTablaPanel tablaPanel;
     private Long idSeleccionado;
 
     public SecretariaPanel(SecretariaController controller) {
         this.controller = controller;
+        formularioPanel = new SecretariaFormularioPanel();
+        tablaPanel = new SecretariaTablaPanel(this::cargarSecretariaSeleccionada);
+
         setLayout(new BorderLayout(5, 5));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(crearPanelTabla(), BorderLayout.NORTH);
-        add(crearPanelFormulario(), BorderLayout.CENTER);
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(tablaPanel, BorderLayout.NORTH);
+        add(formularioPanel, BorderLayout.CENTER);
         add(crearPanelBotones(), BorderLayout.SOUTH);
         cargarTabla();
     }
 
-    private JScrollPane crearPanelTabla() {
-        String[] columnas = {"ID", "Nombre", "Apellido", "DNI"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int fila, int columna) { return false; }
-        };
-        tabla = new JTable(modeloTabla);
-        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabla.getTableHeader().setReorderingAllowed(false);
-        tabla.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) { cargarFilaSeleccionada(); }
-        });
-        JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setPreferredSize(new Dimension(0, 220));
-        return scroll;
-    }
-
-    private JPanel crearPanelFormulario() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("Datos de la Secretaria"));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 6, 4, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        txtNombre     = new JTextField(15);
-        txtApellido   = new JTextField(15);
-        txtDni        = new JTextField(10);
-        txtBuscarDni  = new JTextField(10);
-
-        gbc.gridy = 0;
-        gbc.gridx = 0; gbc.weightx = 0; panel.add(new JLabel("Nombre:"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1; panel.add(txtNombre, gbc);
-        gbc.gridx = 2; gbc.weightx = 0; panel.add(new JLabel("Apellido:"), gbc);
-        gbc.gridx = 3; gbc.weightx = 1; panel.add(txtApellido, gbc);
-
-        gbc.gridy = 1;
-        gbc.gridx = 0; gbc.weightx = 0; panel.add(new JLabel("DNI:"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1; panel.add(txtDni, gbc);
-        gbc.gridx = 2; gbc.weightx = 0; panel.add(new JLabel("Buscar por DNI:"), gbc);
-        gbc.gridx = 3; gbc.weightx = 1; panel.add(txtBuscarDni, gbc);
-
-        return panel;
-    }
-
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
-
-        JButton btnNuevo    = new JButton("Nuevo");
-        JButton btnGuardar  = new JButton("Guardar");
-        JButton btnEliminar = new JButton("Eliminar");
-        JButton btnBuscar   = new JButton("Buscar DNI");
-        JButton btnLimpiar  = new JButton("Limpiar");
-
-        btnNuevo.addActionListener(e    -> limpiarFormulario());
-        btnGuardar.addActionListener(e  -> guardar());
-        btnEliminar.addActionListener(e -> eliminar());
-        btnBuscar.addActionListener(e   -> buscarPorDni());
-        btnLimpiar.addActionListener(e  -> limpiarFormulario());
-
-        panel.add(btnNuevo);
-        panel.add(btnGuardar);
-        panel.add(btnEliminar);
-        panel.add(btnBuscar);
-        panel.add(btnLimpiar);
+        agregarBoton(panel, "Nuevo", this::limpiar);
+        agregarBoton(panel, "Guardar", this::guardar);
+        agregarBoton(panel, "Eliminar", this::eliminar);
+        agregarBoton(panel, "Buscar DNI", this::buscarPorDni);
+        agregarBoton(panel, "Limpiar", this::limpiar);
         return panel;
+    }
+
+    private void agregarBoton(JPanel panel, String texto, Runnable accion) {
+        JButton boton = new JButton(texto);
+        boton.addActionListener(evento -> accion.run());
+        panel.add(boton);
     }
 
     private void cargarTabla() {
-        modeloTabla.setRowCount(0);
         try {
-            for (Secretaria secretaria : controller.listarSecretarias()) {
-                modeloTabla.addRow(new Object[]{secretaria.getId(), secretaria.getNombre(), secretaria.getApellido(), secretaria.getDni()});
-            }
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            tablaPanel.cargar(controller.listarSecretarias());
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
-    private void cargarFilaSeleccionada() {
-        int fila = tabla.getSelectedRow();
-        if (fila < 0) return;
-        idSeleccionado = (Long) modeloTabla.getValueAt(fila, 0);
+    private void cargarSecretariaSeleccionada(Long idSecretaria) {
+        idSeleccionado = idSecretaria;
         try {
-            Secretaria secretaria = controller.buscarSecretariaPorId(idSeleccionado);
-            txtNombre.setText(secretaria.getNombre());
-            txtApellido.setText(secretaria.getApellido());
-            txtDni.setText(String.valueOf(secretaria.getDni()));
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            formularioPanel.cargar(controller.buscarSecretariaPorId(idSecretaria));
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
     private void guardar() {
         try {
-            String nombre   = txtNombre.getText().trim();
-            String apellido = txtApellido.getText().trim();
-            Integer dni     = Integer.parseInt(txtDni.getText().trim());
-            SecretariaRegistro datos = new SecretariaRegistro(nombre, apellido, dni);
-
+            SecretariaRegistro datos = formularioPanel.leerRegistro();
             if (idSeleccionado == null) {
                 controller.registrarSecretaria(datos);
                 JOptionPane.showMessageDialog(this, "Secretaria registrada correctamente.");
@@ -142,12 +75,12 @@ public class SecretariaPanel extends JPanel {
                 controller.actualizarSecretaria(new SecretariaEdicion(idSeleccionado, datos));
                 JOptionPane.showMessageDialog(this, "Secretaria actualizada correctamente.");
             }
-            limpiarFormulario();
+            limpiar();
             cargarTabla();
-        } catch (NumberFormatException e) {
-            mostrarError("DNI debe ser un valor numérico válido.");
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+        } catch (NumberFormatException excepcion) {
+            mostrarError("DNI debe ser un valor numerico valido.");
+        } catch (ClinicaException | IllegalArgumentException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
@@ -156,51 +89,40 @@ public class SecretariaPanel extends JPanel {
             mostrarError("Seleccione una secretaria de la tabla.");
             return;
         }
-        int confirmacion = JOptionPane.showConfirmDialog(this,
-                "¿Eliminar la secretaria seleccionada?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this, "¿Eliminar la secretaria seleccionada?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 controller.eliminarSecretaria(idSeleccionado);
                 JOptionPane.showMessageDialog(this, "Secretaria eliminada correctamente.");
-                limpiarFormulario();
+                limpiar();
                 cargarTabla();
-            } catch (ClinicaException e) {
-                mostrarError(e.getMessage());
+            } catch (ClinicaException excepcion) {
+                mostrarError(excepcion.getMessage());
             }
         }
     }
 
     private void buscarPorDni() {
-        String texto = txtBuscarDni.getText().trim();
+        String texto = formularioPanel.getDniBusqueda();
         if (texto.isEmpty()) {
             mostrarError("Ingrese un DNI para buscar.");
             return;
         }
         try {
-            Integer dni = Integer.parseInt(texto);
-            Secretaria secretaria = controller.buscarSecretariaPorDni(dni);
-            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-                if (modeloTabla.getValueAt(i, 3).equals(secretaria.getDni())) {
-                    tabla.setRowSelectionInterval(i, i);
-                    tabla.scrollRectToVisible(tabla.getCellRect(i, 0, true));
-                    break;
-                }
-            }
-            cargarFilaSeleccionada();
-        } catch (NumberFormatException e) {
-            mostrarError("DNI debe ser un número.");
-        } catch (ClinicaException e) {
-            mostrarError(e.getMessage());
+            Secretaria secretaria = controller.buscarSecretariaPorDni(Integer.parseInt(texto));
+            tablaPanel.seleccionarPorDni(secretaria.getDni());
+        } catch (NumberFormatException excepcion) {
+            mostrarError("El DNI debe ser un numero.");
+        } catch (ClinicaException excepcion) {
+            mostrarError(excepcion.getMessage());
         }
     }
 
-    private void limpiarFormulario() {
+    private void limpiar() {
         idSeleccionado = null;
-        txtNombre.setText("");
-        txtApellido.setText("");
-        txtDni.setText("");
-        txtBuscarDni.setText("");
-        tabla.clearSelection();
+        formularioPanel.limpiar();
+        tablaPanel.limpiarSeleccion();
     }
 
     private void mostrarError(String mensaje) {
