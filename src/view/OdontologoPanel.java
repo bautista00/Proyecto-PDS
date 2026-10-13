@@ -1,10 +1,9 @@
 package view;
 
 import controller.OdontologoController;
+import dto.OdontologoDatos;
 import dto.OdontologoEdicion;
 import dto.OdontologoRegistro;
-import entity.EspecialidadOdontologica;
-import entity.Odontologo;
 import exception.ClinicaException;
 
 import javax.swing.JButton;
@@ -12,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.List;
 
 public class OdontologoPanel extends JPanel {
 
@@ -21,10 +19,9 @@ public class OdontologoPanel extends JPanel {
     private final OdontologoTablaPanel tablaPanel;
     private Long idSeleccionado;
 
-    public OdontologoPanel(OdontologoController controller,
-                           List<EspecialidadOdontologica> especialidades) {
+    public OdontologoPanel(OdontologoController controller) {
         this.controller = controller;
-        formularioPanel = new OdontologoFormularioPanel(especialidades);
+        formularioPanel = new OdontologoFormularioPanel(controller.listarEspecialidades());
         tablaPanel = new OdontologoTablaPanel(this::cargarOdontologoSeleccionado);
 
         setLayout(new BorderLayout(5, 5));
@@ -113,7 +110,7 @@ public class OdontologoPanel extends JPanel {
             return;
         }
         try {
-            Odontologo odontologo = controller.buscarOdontologoPorMatricula(matricula);
+            OdontologoDatos odontologo = controller.buscarOdontologoPorMatricula(matricula);
             tablaPanel.seleccionarPorMatricula(odontologo.getMatricula());
         } catch (ClinicaException excepcion) {
             mostrarError(excepcion.getMessage());

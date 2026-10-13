@@ -1,6 +1,6 @@
 package view;
 
-import entity.Turno;
+import dto.TurnoDatos;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -58,19 +58,19 @@ final class TurnoTablaPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
-    void cargar(List<Turno> turnos) {
+    void cargar(List<TurnoDatos> turnos) {
         modelo.setRowCount(0);
-        for (Turno turno : turnos) {
+        for (TurnoDatos turno : turnos) {
             modelo.addRow(new Object[]{
                     turno.getId(),
                     turno.getNombrePaciente(),
                     turno.getNombreOdontologo(),
-                    turno.getEspecialidadOdontologo().getDescripcion(),
+                    turno.getEspecialidad(),
                     turno.getNombreSecretaria(),
                     turno.getFecha().toString(),
                     turno.getHora().toString(),
                     turno.getMotivoConsulta(),
-                    turno.getEstado().toString()
+                    turno.getEstado()
             });
         }
     }

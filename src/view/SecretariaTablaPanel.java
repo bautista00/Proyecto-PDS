@@ -1,6 +1,6 @@
 package view;
 
-import entity.Secretaria;
+import dto.SecretariaDatos;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,9 +45,9 @@ final class SecretariaTablaPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
-    void cargar(List<Secretaria> secretarias) {
+    void cargar(List<SecretariaDatos> secretarias) {
         modelo.setRowCount(0);
-        for (Secretaria secretaria : secretarias) {
+        for (SecretariaDatos secretaria : secretarias) {
             modelo.addRow(new Object[]{
                     secretaria.getId(), secretaria.getNombre(),
                     secretaria.getApellido(), secretaria.getDni()

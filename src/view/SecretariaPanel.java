@@ -1,9 +1,9 @@
 package view;
 
 import controller.SecretariaController;
+import dto.SecretariaDatos;
 import dto.SecretariaEdicion;
 import dto.SecretariaRegistro;
-import entity.Secretaria;
 import exception.ClinicaException;
 
 import javax.swing.JButton;
@@ -110,7 +110,7 @@ public class SecretariaPanel extends JPanel {
             return;
         }
         try {
-            Secretaria secretaria = controller.buscarSecretariaPorDni(Integer.parseInt(texto));
+            SecretariaDatos secretaria = controller.buscarSecretariaPorDni(Integer.parseInt(texto));
             tablaPanel.seleccionarPorDni(secretaria.getDni());
         } catch (NumberFormatException excepcion) {
             mostrarError("El DNI debe ser un numero.");

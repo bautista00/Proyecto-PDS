@@ -1,12 +1,11 @@
 package view;
 
+import dto.OdontologoDatos;
+import dto.PacienteDatos;
+import dto.SecretariaDatos;
+import dto.TurnoDatos;
 import dto.TurnoEdicion;
 import dto.TurnoRegistro;
-import entity.EstadoTurno;
-import entity.Odontologo;
-import entity.Paciente;
-import entity.Secretaria;
-import entity.Turno;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,18 +23,19 @@ import java.util.List;
 // y estado, más fecha, hora y motivo).
 // Se extrajo de TurnoPanel para aislar el manejo de los campos de pantalla.
 // Su tarea es traducir en las dos direcciones: de los campos a los DTOs TurnoRegistro
-// y TurnoEdicion, y de un Turno existente a los campos.
+// y TurnoEdicion, y de los datos de un turno existente a los campos.
 final class TurnoFormularioPanel extends JPanel {
 
-    private final JComboBox<OpcionEntidad<Paciente>> cboPaciente = new JComboBox<>();
-    private final JComboBox<OpcionEntidad<Odontologo>> cboOdontologo = new JComboBox<>();
-    private final JComboBox<OpcionEntidad<Secretaria>> cboSecretaria = new JComboBox<>();
-    private final JComboBox<EstadoTurno> cboEstado = new JComboBox<>(EstadoTurno.values());
+    private final JComboBox<OpcionEntidad> cboPaciente = new JComboBox<>();
+    private final JComboBox<OpcionEntidad> cboOdontologo = new JComboBox<>();
+    private final JComboBox<OpcionEntidad> cboSecretaria = new JComboBox<>();
+    private final JComboBox<String> cboEstado;
     private final JTextField txtFecha = new JTextField(12);
     private final JTextField txtHora = new JTextField(8);
     private final JTextField txtMotivo = new JTextField(30);
 
-    TurnoFormularioPanel() {
+    TurnoFormularioPanel(List<String> estados) {
+        cboEstado = new JComboBox<>(estados.toArray(new String[0]));
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createTitledBorder("Datos del Turno"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -57,27 +57,26 @@ final class TurnoFormularioPanel extends JPanel {
         add(cboEstado, gbc);
     }
 
-    void actualizarActores(List<Paciente> pacientes,
-                           List<Odontologo> odontologos,
-                           List<Secretaria> secretarias) {
+    void actualizarActores(List<PacienteDatos> pacientes,
+                           List<OdontologoDatos> odontologos,
+                           List<SecretariaDatos> secretarias) {
         cboPaciente.removeAllItems();
-        for (Paciente paciente : pacientes) {
-            cboPaciente.addItem(new OpcionEntidad<>(
-                    paciente, paciente.getId() + " - " + paciente.getNombreCompleto()));
+        for (PacienteDatos paciente : pacientes) {
+            cboPaciente.addItem(new OpcionEntidad(paciente.getId(), paciente.getId() + " - "
+                    + paciente.getNombre() + " " + paciente.getApellido()));
         }
 
         cboOdontologo.removeAllItems();
-        for (Odontologo odontologo : odontologos) {
-            cboOdontologo.addItem(new OpcionEntidad<>(
-                    odontologo,
-                    odontologo.getId() + " - " + odontologo.getNombreCompleto()
-                            + " (" + odontologo.getEspecialidad().getDescripcion() + ")"));
+        for (OdontologoDatos odontologo : odontologos) {
+            cboOdontologo.addItem(new OpcionEntidad(odontologo.getId(), odontologo.getId() + " - "
+                    + odontologo.getNombre() + " " + odontologo.getApellido()
+                    + " (" + odontologo.getEspecialidad() + ")"));
         }
 
         cboSecretaria.removeAllItems();
-        for (Secretaria secretaria : secretarias) {
-            cboSecretaria.addItem(new OpcionEntidad<>(
-                    secretaria, secretaria.getId() + " - " + secretaria.getNombreCompleto()));
+        for (SecretariaDatos secretaria : secretarias) {
+            cboSecretaria.addItem(new OpcionEntidad(secretaria.getId(), secretaria.getId() + " - "
+                    + secretaria.getNombre() + " " + secretaria.getApellido()));
         }
     }
 
@@ -88,11 +87,9 @@ final class TurnoFormularioPanel extends JPanel {
     }
 
     TurnoRegistro leerRegistro() {
-        OpcionEntidad<Paciente> paciente = opcionSeleccionada(cboPaciente, "Seleccione un paciente.");
-        OpcionEntidad<Odontologo> odontologo =
-                opcionSeleccionada(cboOdontologo, "Seleccione un odontologo.");
-        OpcionEntidad<Secretaria> secretaria =
-                opcionSeleccionada(cboSecretaria, "Seleccione una secretaria.");
+        OpcionEntidad paciente = opcionSeleccionada(cboPaciente, "Seleccione un paciente.");
+        OpcionEntidad odontologo = opcionSeleccionada(cboOdontologo, "Seleccione un odontologo.");
+        OpcionEntidad secretaria = opcionSeleccionada(cboSecretaria, "Seleccione una secretaria.");
 
         TurnoRegistro datos = new TurnoRegistro();
         datos.setIdPaciente(paciente.getId());
@@ -113,11 +110,11 @@ final class TurnoFormularioPanel extends JPanel {
         edicion.setFecha(registro.getFecha());
         edicion.setHora(registro.getHora());
         edicion.setMotivoConsulta(registro.getMotivoConsulta());
-        edicion.setEstado((EstadoTurno) cboEstado.getSelectedItem());
+        edicion.setEstado((String) cboEstado.getSelectedItem());
         return edicion;
     }
 
-    void cargar(Turno turno) {
+    void cargar(TurnoDatos turno) {
         seleccionarPorId(cboPaciente, turno.getIdPaciente());
         seleccionarPorId(cboOdontologo, turno.getIdOdontologo());
         seleccionarPorId(cboSecretaria, turno.getIdSecretaria());
@@ -136,12 +133,10 @@ final class TurnoFormularioPanel extends JPanel {
         txtFecha.setText("");
         txtHora.setText("");
         txtMotivo.setText("");
-        cboEstado.setSelectedItem(EstadoTurno.PENDIENTE);
+        seleccionarPrimero(cboEstado);
     }
 
-    private <T extends entity.Persona> OpcionEntidad<T> opcionSeleccionada(
-            JComboBox<OpcionEntidad<T>> combo,
-            String mensaje) {
+    private OpcionEntidad opcionSeleccionada(JComboBox<OpcionEntidad> combo, String mensaje) {
         int indice = combo.getSelectedIndex();
         if (indice < 0) {
             throw new IllegalStateException(mensaje);
@@ -149,9 +144,7 @@ final class TurnoFormularioPanel extends JPanel {
         return combo.getItemAt(indice);
     }
 
-    private <T extends entity.Persona> void seleccionarPorId(
-            JComboBox<OpcionEntidad<T>> combo,
-            Long id) {
+    private void seleccionarPorId(JComboBox<OpcionEntidad> combo, Long id) {
         for (int i = 0; i < combo.getItemCount(); i++) {
             if (combo.getItemAt(i).getId().equals(id)) {
                 combo.setSelectedIndex(i);

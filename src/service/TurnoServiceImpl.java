@@ -7,7 +7,6 @@ import entity.Odontologo;
 import entity.Paciente;
 import entity.Secretaria;
 import entity.Turno;
-import exception.DatoInvalidoException;
 import repository.EscrituraTurnosRepository;
 
 import java.time.LocalDate;
@@ -44,19 +43,11 @@ public class TurnoServiceImpl implements TurnoService {
 
     @Override
     public Turno registrarTurno(TurnoRegistro datos) {
-        if (datos == null) {
-            throw new DatoInvalidoException("Los datos del turno no pueden ser nulos.");
-        }
         Paciente paciente = turnoResolutor.obtenerPaciente(datos.getIdPaciente());
         Odontologo odontologo = turnoResolutor.obtenerOdontologo(datos.getIdOdontologo());
         Secretaria secretaria = turnoResolutor.obtenerSecretaria(datos.getIdSecretaria());
 
-        turnoValidador.validarDatos(
-                datos.getFecha(),
-                datos.getHora(),
-                datos.getMotivoConsulta(),
-                EstadoTurno.PENDIENTE,
-                odontologo);
+        turnoValidador.validarOdontologoHabilitado(odontologo, datos.getMotivoConsulta());
         disponibilidadTurnos.validarDisponible(
                 odontologo.getId(), datos.getFecha(), datos.getHora());
 
@@ -114,20 +105,13 @@ public class TurnoServiceImpl implements TurnoService {
 
     @Override
     public Turno modificarTurno(TurnoEdicion datos) {
-        if (datos == null) {
-            throw new DatoInvalidoException("Los datos de edicion del turno no pueden ser nulos.");
-        }
         Turno turno = turnoResolutor.obtenerTurno(datos.getIdTurno());
         Odontologo odontologo = turnoResolutor.obtenerOdontologo(datos.getIdOdontologo());
         Secretaria secretaria = turnoResolutor.obtenerSecretaria(datos.getIdSecretaria());
 
-        turnoValidador.validarDatos(
-                datos.getFecha(),
-                datos.getHora(),
-                datos.getMotivoConsulta(),
-                datos.getEstado(),
-                odontologo);
-        if (datos.getEstado().ocupaAgenda()) {
+        EstadoTurno estado = EstadoTurno.valueOf(datos.getEstado());
+        turnoValidador.validarOdontologoHabilitado(odontologo, datos.getMotivoConsulta());
+        if (estado.ocupaAgenda()) {
             disponibilidadTurnos.validarDisponibleExcluyendo(
                     turno.getId(), odontologo.getId(), datos.getFecha(), datos.getHora());
         }
@@ -138,14 +122,13 @@ public class TurnoServiceImpl implements TurnoService {
                 datos.getFecha(),
                 datos.getHora(),
                 datos.getMotivoConsulta(),
-                datos.getEstado());
+                estado);
         turnoRepository.actualizar(turno);
         return turno;
     }
 
     @Override
     public Turno cambiarEstado(Long idTurno, EstadoTurno nuevoEstado) {
-        turnoValidador.validarEstado(nuevoEstado);
         Turno turno = turnoResolutor.obtenerTurno(idTurno);
         if (nuevoEstado.ocupaAgenda()) {
             disponibilidadTurnos.validarDisponibleExcluyendo(

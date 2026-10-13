@@ -1,7 +1,6 @@
 package view;
 
 import dto.SecretariaRegistro;
-import entity.Secretaria;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -13,7 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 // Formulario con los campos de la secretaria. Se extrajo de SecretariaPanel (SRP).
-// Traduce los campos a SecretariaRegistro y una Secretaria existente a los campos.
+// Traduce los campos a SecretariaRegistro y los datos de una secretaria existente a los campos.
 final class SecretariaFormularioPanel extends JPanel {
 
     private final JTextField txtNombre = new JTextField(15);
@@ -34,10 +33,10 @@ final class SecretariaFormularioPanel extends JPanel {
                 Integer.parseInt(txtDni.getText().trim()));
     }
 
-    void cargar(Secretaria secretaria) {
-        txtNombre.setText(secretaria.getNombre());
-        txtApellido.setText(secretaria.getApellido());
-        txtDni.setText(String.valueOf(secretaria.getDni()));
+    void cargar(SecretariaRegistro datos) {
+        txtNombre.setText(datos.getNombre());
+        txtApellido.setText(datos.getApellido());
+        txtDni.setText(String.valueOf(datos.getDni()));
     }
 
     String getDniBusqueda() {

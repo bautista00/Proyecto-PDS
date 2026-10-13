@@ -5,7 +5,8 @@ import exception.DatoInvalidoException;
 
 // Catálogo de validaciones primitivas reutilizables: IDs y números positivos,
 // texto no vacío, solo letras. No contiene reglas de negocio.
-// Las reglas propias del turno (fecha, hora, estado, odontólogo habilitado) viven en TurnoValidador.
+// La usan los controllers para validar los campos y los servicios para validar IDs y claves de búsqueda.
+// La regla propia del turno (odontólogo habilitado) vive en TurnoValidador.
  
 public class ValidacionesClinica {
 

@@ -1,6 +1,6 @@
 package entity;
 
-// Cobertura de obra social: el paciente paga solo un copago fijo, sin importar el odontólogo.
+// Estrategia concreta (Strategy): el paciente paga solo un copago fijo, sin importar el odontólogo.
 // Es otra implementación de CoberturaPaciente; una cobertura nueva sería otra clase (OCP).
 public final class CoberturaObraSocial implements CoberturaPaciente {
 

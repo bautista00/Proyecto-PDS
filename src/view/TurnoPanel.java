@@ -4,12 +4,11 @@ import controller.OdontologoController;
 import controller.PacienteController;
 import controller.SecretariaController;
 import controller.TurnoController;
+import dto.OdontologoDatos;
+import dto.PacienteDatos;
+import dto.SecretariaDatos;
 import dto.TurnoEdicion;
 import dto.TurnoRegistro;
-import entity.Odontologo;
-import entity.Paciente;
-import entity.Secretaria;
-import entity.Turno;
 import exception.ClinicaException;
 
 import javax.swing.JButton;
@@ -45,7 +44,7 @@ public class TurnoPanel extends JPanel {
         this.odontologoController = odontologoController;
         this.secretariaController = secretariaController;
         this.tablaPanel = new TurnoTablaPanel(this::cargarTurnoSeleccionado);
-        this.formularioPanel = new TurnoFormularioPanel();
+        this.formularioPanel = new TurnoFormularioPanel(turnoController.listarEstados());
 
         setLayout(new BorderLayout(5, 5));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -87,13 +86,13 @@ public class TurnoPanel extends JPanel {
     }
 
     public void actualizarCombos() {
-        List<Paciente> pacientes = obtenerPacientes();
-        List<Odontologo> odontologos = obtenerOdontologos();
-        List<Secretaria> secretarias = obtenerSecretarias();
+        List<PacienteDatos> pacientes = obtenerPacientes();
+        List<OdontologoDatos> odontologos = obtenerOdontologos();
+        List<SecretariaDatos> secretarias = obtenerSecretarias();
         formularioPanel.actualizarActores(pacientes, odontologos, secretarias);
     }
 
-    private List<Paciente> obtenerPacientes() {
+    private List<PacienteDatos> obtenerPacientes() {
         try {
             return pacienteController.listarPacientesOrdenadosPorApellido();
         } catch (ClinicaException excepcion) {
@@ -101,7 +100,7 @@ public class TurnoPanel extends JPanel {
         }
     }
 
-    private List<Odontologo> obtenerOdontologos() {
+    private List<OdontologoDatos> obtenerOdontologos() {
         try {
             return odontologoController.listarOdontologos();
         } catch (ClinicaException excepcion) {
@@ -109,7 +108,7 @@ public class TurnoPanel extends JPanel {
         }
     }
 
-    private List<Secretaria> obtenerSecretarias() {
+    private List<SecretariaDatos> obtenerSecretarias() {
         try {
             return secretariaController.listarSecretarias();
         } catch (ClinicaException excepcion) {
@@ -120,8 +119,7 @@ public class TurnoPanel extends JPanel {
     private void cargarTurnoSeleccionado(Long idTurno) {
         idSeleccionado = idTurno;
         try {
-            Turno turno = turnoController.buscarTurnoPorId(idTurno);
-            formularioPanel.cargar(turno);
+            formularioPanel.cargar(turnoController.buscarTurnoPorId(idTurno));
         } catch (ClinicaException excepcion) {
             mostrarError(excepcion.getMessage());
         }

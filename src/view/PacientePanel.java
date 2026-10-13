@@ -1,10 +1,9 @@
 package view;
 
 import controller.PacienteController;
+import dto.PacienteDatos;
 import dto.PacienteEdicion;
 import dto.PacienteRegistro;
-import entity.CoberturaPaciente;
-import entity.Paciente;
 import exception.ClinicaException;
 
 import javax.swing.JButton;
@@ -12,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.List;
 
 public class PacientePanel extends JPanel {
 
@@ -21,9 +19,9 @@ public class PacientePanel extends JPanel {
     private final PacienteTablaPanel tablaPanel;
     private Long idSeleccionado;
 
-    public PacientePanel(PacienteController controller, List<CoberturaPaciente> coberturas) {
+    public PacientePanel(PacienteController controller) {
         this.controller = controller;
-        formularioPanel = new PacienteFormularioPanel(coberturas);
+        formularioPanel = new PacienteFormularioPanel(controller.listarCoberturas());
         tablaPanel = new PacienteTablaPanel(this::cargarPacienteSeleccionado);
 
         setLayout(new BorderLayout(5, 5));
@@ -61,7 +59,7 @@ public class PacientePanel extends JPanel {
     private void cargarPacienteSeleccionado(Long idPaciente) {
         idSeleccionado = idPaciente;
         try {
-            formularioPanel.cargar(controller.buscarDatosPacientePorId(idPaciente));
+            formularioPanel.cargar(controller.buscarPacientePorId(idPaciente));
         } catch (ClinicaException excepcion) {
             mostrarError(excepcion.getMessage());
         }
@@ -112,7 +110,7 @@ public class PacientePanel extends JPanel {
             return;
         }
         try {
-            Paciente paciente = controller.buscarPacientePorDni(Integer.parseInt(texto));
+            PacienteDatos paciente = controller.buscarPacientePorDni(Integer.parseInt(texto));
             tablaPanel.seleccionarPorDni(paciente.getDni());
         } catch (NumberFormatException excepcion) {
             mostrarError("El DNI debe ser un numero.");

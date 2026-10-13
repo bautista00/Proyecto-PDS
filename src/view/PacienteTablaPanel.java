@@ -1,6 +1,6 @@
 package view;
 
-import entity.Paciente;
+import dto.PacienteDatos;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,12 +46,12 @@ final class PacienteTablaPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
-    void cargar(List<Paciente> pacientes) {
+    void cargar(List<PacienteDatos> pacientes) {
         modelo.setRowCount(0);
-        for (Paciente paciente : pacientes) {
+        for (PacienteDatos paciente : pacientes) {
             modelo.addRow(new Object[]{
                     paciente.getId(), paciente.getNombre(), paciente.getApellido(),
-                    paciente.getDni(), paciente.getEmail(), paciente.getCobertura().getDescripcion()
+                    paciente.getDni(), paciente.getEmail(), paciente.getCobertura()
             });
         }
     }

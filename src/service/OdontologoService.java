@@ -2,6 +2,7 @@ package service;
 
 import dto.OdontologoEdicion;
 import dto.OdontologoRegistro;
+import entity.EspecialidadOdontologica;
 import entity.Odontologo;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface OdontologoService {
     Odontologo buscarPorMatricula(String matricula);
 
     List<Odontologo> listarTodos();
+
+    List<EspecialidadOdontologica> listarEspecialidades();
 
     Odontologo actualizar(OdontologoEdicion edicion);
 

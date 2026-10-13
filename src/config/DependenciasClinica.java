@@ -9,7 +9,6 @@ import entity.CoberturaPaciente;
 import entity.CreadorEndodoncista;
 import entity.CreadorOdontologoGeneral;
 import entity.CreadorOrtodoncista;
-import entity.EspecialidadOdontologica;
 import entity.OdontologoFactory;
 import persistence.ArchivoTexto;
 import persistence.PersistenciaServicio;
@@ -29,7 +28,6 @@ import service.TurnoServiceImpl;
 import service.TurnoValidador;
 
 import java.util.Arrays;
-import java.util.List;
 
 //
  //Raíz de composición: único lugar donde se crean y conectan repositorios,
@@ -76,7 +74,8 @@ public class DependenciasClinica {
                 secretariaRepository,
                 turnoRepository);
 
-        PacienteServiceImpl pacienteService = new PacienteServiceImpl(pacienteRepository);
+        PacienteServiceImpl pacienteService = new PacienteServiceImpl(
+                pacienteRepository, catalogoCoberturas);
         OdontologoServiceImpl odontologoService = new OdontologoServiceImpl(
                 odontologoRepository, odontologoFactory);
         SecretariaServiceImpl secretariaService = new SecretariaServiceImpl(secretariaRepository);
@@ -133,13 +132,5 @@ public class DependenciasClinica {
 
     public TurnoController getTurnoController() {
         return turnoController;
-    }
-
-    public List<CoberturaPaciente> getCoberturas() {
-        return catalogoCoberturas.listar();
-    }
-
-    public List<EspecialidadOdontologica> getEspecialidades() {
-        return odontologoFactory.listarEspecialidades();
     }
 }

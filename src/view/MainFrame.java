@@ -4,12 +4,9 @@ import controller.OdontologoController;
 import controller.PacienteController;
 import controller.SecretariaController;
 import controller.TurnoController;
-import entity.CoberturaPaciente;
-import entity.EspecialidadOdontologica;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import java.util.List;
 
 public class MainFrame extends JFrame {
 
@@ -18,12 +15,9 @@ public class MainFrame extends JFrame {
     public MainFrame(PacienteController pacienteController,
                      OdontologoController odontologoController,
                      SecretariaController secretariaController,
-                     TurnoController turnoController,
-                     List<CoberturaPaciente> coberturas,
-                     List<EspecialidadOdontologica> especialidades) {
-        PacientePanel panelPacientes = new PacientePanel(pacienteController, coberturas);
-        OdontologoPanel panelOdontologos = new OdontologoPanel(
-                odontologoController, especialidades);
+                     TurnoController turnoController) {
+        PacientePanel panelPacientes = new PacientePanel(pacienteController);
+        OdontologoPanel panelOdontologos = new OdontologoPanel(odontologoController);
         SecretariaPanel panelSecretarias = new SecretariaPanel(secretariaController);
         panelTurnos = new TurnoPanel(
                 turnoController,

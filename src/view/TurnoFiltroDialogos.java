@@ -1,8 +1,7 @@
 package view;
 
 import controller.TurnoController;
-import entity.EstadoTurno;
-import entity.Turno;
+import dto.TurnoDatos;
 import exception.ClinicaException;
 
 import javax.swing.JOptionPane;
@@ -20,13 +19,13 @@ final class TurnoFiltroDialogos {
 
     private final Component padre;
     private final TurnoController controller;
-    private final Consumer<List<Turno>> mostrarResultados;
+    private final Consumer<List<TurnoDatos>> mostrarResultados;
     private final Consumer<String> mostrarError;
     private final Runnable verTodos;
 
     TurnoFiltroDialogos(Component padre,
                         TurnoController controller,
-                        Consumer<List<Turno>> mostrarResultados,
+                        Consumer<List<TurnoDatos>> mostrarResultados,
                         Consumer<String> mostrarError,
                         Runnable verTodos) {
         this.padre = padre;
@@ -69,14 +68,15 @@ final class TurnoFiltroDialogos {
     }
 
     private void porEstado() {
-        EstadoTurno estado = (EstadoTurno) JOptionPane.showInputDialog(
+        Object[] estados = controller.listarEstados().toArray();
+        String estado = (String) JOptionPane.showInputDialog(
                 padre,
                 "Seleccione el estado a filtrar:",
                 "Filtrar por Estado",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                EstadoTurno.values(),
-                EstadoTurno.PENDIENTE);
+                estados,
+                estados[0]);
         if (estado != null) {
             ejecutar(() -> controller.listarTurnosPorEstado(estado));
         }
@@ -113,7 +113,7 @@ final class TurnoFiltroDialogos {
         }
     }
 
-    private void ejecutar(Supplier<List<Turno>> consulta) {
+    private void ejecutar(Supplier<List<TurnoDatos>> consulta) {
         try {
             mostrarResultados.accept(consulta.get());
         } catch (ClinicaException excepcion) {

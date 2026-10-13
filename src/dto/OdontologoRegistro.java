@@ -1,7 +1,5 @@
 package dto;
 
-import entity.EspecialidadOdontologica;
-
  //DTO para el registro de un odontólogo.
   
 
@@ -11,13 +9,13 @@ public class OdontologoRegistro {
     private final String apellido;
     private final Integer dni;
     private final String matricula;
-    private final EspecialidadOdontologica especialidad;
+    private final String especialidad;
 
     public OdontologoRegistro(String nombre,
                               String apellido,
                               Integer dni,
                               String matricula,
-                              EspecialidadOdontologica especialidad) {
+                              String especialidad) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -41,7 +39,7 @@ public class OdontologoRegistro {
         return matricula;
     }
 
-    public EspecialidadOdontologica getEspecialidad() {
+    public String getEspecialidad() {
         return especialidad;
     }
 }

@@ -1,8 +1,6 @@
 package view;
 
 import dto.OdontologoRegistro;
-import entity.EspecialidadOdontologica;
-import entity.Odontologo;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -16,22 +14,21 @@ import java.awt.Insets;
 import java.util.List;
 
 // Formulario con los campos del odontólogo. Se extrajo de OdontologoPanel (SRP).
-// Traduce los campos a OdontologoRegistro y un Odontologo existente a los campos.
+// Traduce los campos a OdontologoRegistro y los datos de un odontólogo existente a los campos.
 final class OdontologoFormularioPanel extends JPanel {
 
     private final JTextField txtNombre = new JTextField(15);
     private final JTextField txtApellido = new JTextField(15);
     private final JTextField txtDni = new JTextField(10);
     private final JTextField txtMatricula = new JTextField(10);
-    private final JComboBox<EspecialidadOdontologica> cboEspecialidad;
+    private final JComboBox<String> cboEspecialidad;
     private final JTextField txtBuscarMatricula = new JTextField(10);
 
-    OdontologoFormularioPanel(List<EspecialidadOdontologica> especialidades) {
+    OdontologoFormularioPanel(List<String> especialidades) {
         if (especialidades == null || especialidades.isEmpty()) {
             throw new IllegalArgumentException("Debe existir al menos una especialidad disponible.");
         }
-        cboEspecialidad = new JComboBox<>(
-                especialidades.toArray(new EspecialidadOdontologica[0]));
+        cboEspecialidad = new JComboBox<>(especialidades.toArray(new String[0]));
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createTitledBorder("Datos del Odontologo"));
         construirCampos();
@@ -43,15 +40,15 @@ final class OdontologoFormularioPanel extends JPanel {
                 txtApellido.getText().trim(),
                 Integer.parseInt(txtDni.getText().trim()),
                 txtMatricula.getText().trim(),
-                (EspecialidadOdontologica) cboEspecialidad.getSelectedItem());
+                (String) cboEspecialidad.getSelectedItem());
     }
 
-    void cargar(Odontologo odontologo) {
-        txtNombre.setText(odontologo.getNombre());
-        txtApellido.setText(odontologo.getApellido());
-        txtDni.setText(String.valueOf(odontologo.getDni()));
-        txtMatricula.setText(odontologo.getMatricula());
-        cboEspecialidad.setSelectedItem(odontologo.getEspecialidad());
+    void cargar(OdontologoRegistro datos) {
+        txtNombre.setText(datos.getNombre());
+        txtApellido.setText(datos.getApellido());
+        txtDni.setText(String.valueOf(datos.getDni()));
+        txtMatricula.setText(datos.getMatricula());
+        cboEspecialidad.setSelectedItem(datos.getEspecialidad());
         cboEspecialidad.setEnabled(false);
     }
 

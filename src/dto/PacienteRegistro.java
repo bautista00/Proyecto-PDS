@@ -1,7 +1,5 @@
 package dto;
 
-import entity.CoberturaPaciente;
-
 // DTO para el registro de un paciente.
 
 public class PacienteRegistro {
@@ -14,7 +12,7 @@ public class PacienteRegistro {
     private Integer numero;
     private String localidad;
     private String provincia;
-    private CoberturaPaciente cobertura;
+    private String cobertura;
 
     public String getNombre() {
         return nombre;
@@ -80,11 +78,11 @@ public class PacienteRegistro {
         this.provincia = provincia;
     }
 
-    public CoberturaPaciente getCobertura() {
+    public String getCobertura() {
         return cobertura;
     }
 
-    public void setCobertura(CoberturaPaciente cobertura) {
+    public void setCobertura(String cobertura) {
         this.cobertura = cobertura;
     }
 }

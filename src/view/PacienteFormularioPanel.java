@@ -1,7 +1,6 @@
 package view;
 
 import dto.PacienteRegistro;
-import entity.CoberturaPaciente;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -26,14 +25,14 @@ final class PacienteFormularioPanel extends JPanel {
     private final JTextField txtNumero = new JTextField(5);
     private final JTextField txtLocalidad = new JTextField(15);
     private final JTextField txtProvincia = new JTextField(15);
-    private final JComboBox<CoberturaPaciente> cboCobertura;
+    private final JComboBox<String> cboCobertura;
     private final JTextField txtBuscarDni = new JTextField(10);
 
-    PacienteFormularioPanel(List<CoberturaPaciente> coberturas) {
+    PacienteFormularioPanel(List<String> coberturas) {
         if (coberturas == null || coberturas.isEmpty()) {
             throw new IllegalArgumentException("Debe existir al menos una cobertura disponible.");
         }
-        cboCobertura = new JComboBox<>(coberturas.toArray(new CoberturaPaciente[0]));
+        cboCobertura = new JComboBox<>(coberturas.toArray(new String[0]));
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createTitledBorder("Datos del Paciente"));
         construirCampos();
@@ -49,7 +48,7 @@ final class PacienteFormularioPanel extends JPanel {
         datos.setNumero(Integer.parseInt(txtNumero.getText().trim()));
         datos.setLocalidad(txtLocalidad.getText().trim());
         datos.setProvincia(txtProvincia.getText().trim());
-        datos.setCobertura((CoberturaPaciente) cboCobertura.getSelectedItem());
+        datos.setCobertura((String) cboCobertura.getSelectedItem());
         return datos;
     }
 

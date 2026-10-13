@@ -106,6 +106,7 @@ public class Paciente extends Persona implements Comparable<Paciente> {
         this.cobertura = cobertura;
     }
 
+    // Contexto de Strategy: delega el cálculo en la cobertura, sin conocer cuál es.
     public Double calcularMonto(Odontologo odontologo) {
         if (odontologo == null) {
             throw new IllegalArgumentException("El odontologo no puede ser nulo.");

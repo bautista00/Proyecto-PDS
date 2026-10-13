@@ -1,6 +1,6 @@
 package view;
 
-import entity.Odontologo;
+import dto.OdontologoDatos;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,13 +46,13 @@ final class OdontologoTablaPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
-    void cargar(List<Odontologo> odontologos) {
+    void cargar(List<OdontologoDatos> odontologos) {
         modelo.setRowCount(0);
-        for (Odontologo odontologo : odontologos) {
+        for (OdontologoDatos odontologo : odontologos) {
             modelo.addRow(new Object[]{
                     odontologo.getId(), odontologo.getNombre(), odontologo.getApellido(),
                     odontologo.getDni(), odontologo.getMatricula(),
-                    odontologo.getEspecialidad().getDescripcion(),
+                    odontologo.getEspecialidad(),
                     String.format("$%.0f", odontologo.getTarifaBase())
             });
         }

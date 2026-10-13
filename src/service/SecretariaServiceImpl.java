@@ -10,10 +10,9 @@ import java.util.List;
 
 
 // Implementación del servicio de secretarias, que se encarga de la lógica de negocio relacionada con las secretarias.
-// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar secretarias, validando los datos y 
-// las reglas de negocio correspondientes.
+// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar secretarias, aplicando
+// las reglas de negocio correspondientes (los campos ya llegan validados por SecretariaController).
 // Utiliza el repositorio de secretarias para persistir y recuperar los datos de las secretarias.
-// Utiliza ValidacionesClinica para validar los datos de las secretarias antes de registrarlas o actualizarlas.
 
 
 public class SecretariaServiceImpl implements SecretariaService {
@@ -26,7 +25,6 @@ public class SecretariaServiceImpl implements SecretariaService {
 
     @Override
     public Secretaria registrar(SecretariaRegistro datos) {
-        validarDatos(datos);
         if (secretariaRepository.existeDni(datos.getDni())) {
             throw new DatoInvalidoException("Ya existe una secretaria con el DNI " + datos.getDni() + ".");
         }
@@ -62,11 +60,7 @@ public class SecretariaServiceImpl implements SecretariaService {
 
     @Override
     public Secretaria actualizar(SecretariaEdicion edicion) {
-        if (edicion == null) {
-            throw new DatoInvalidoException("Los datos de edicion de la secretaria no pueden ser nulos.");
-        }
         SecretariaRegistro datos = edicion.getDatos();
-        validarDatos(datos);
         Secretaria secretaria = buscarPorId(edicion.getIdSecretaria());
         Secretaria mismoDni = secretariaRepository.buscarPorDni(datos.getDni());
         if (mismoDni != null && !mismoDni.getId().equals(secretaria.getId())) {
@@ -88,16 +82,5 @@ public class SecretariaServiceImpl implements SecretariaService {
         }
         secretariaRepository.eliminar(id);
         return true;
-    }
-
-    private void validarDatos(SecretariaRegistro datos) {
-        if (datos == null) {
-            throw new DatoInvalidoException("Los datos de la secretaria no pueden ser nulos.");
-        }
-        ValidacionesClinica.validarNombreNoVacio(datos.getNombre());
-        ValidacionesClinica.validarNombreSoloLetras(datos.getNombre());
-        ValidacionesClinica.validarApellidoNoVacio(datos.getApellido());
-        ValidacionesClinica.validarApellidoSoloLetras(datos.getApellido());
-        ValidacionesClinica.validarDniPositivo(datos.getDni());
     }
 }

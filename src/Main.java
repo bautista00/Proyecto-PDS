@@ -13,9 +13,7 @@ public class Main {
                     dependencias.getPacienteController(),
                     dependencias.getOdontologoController(),
                     dependencias.getSecretariaController(),
-                    dependencias.getTurnoController(),
-                    dependencias.getCoberturas(),
-                    dependencias.getEspecialidades());
+                    dependencias.getTurnoController());
             new ManejadorCierreAplicacion(frame, dependencias::guardarDatos).configurar();
             frame.setVisible(true);
         });

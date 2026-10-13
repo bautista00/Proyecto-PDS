@@ -1,7 +1,5 @@
 package dto;
 
-import entity.EstadoTurno;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,7 +13,7 @@ public class TurnoEdicion {
     private LocalDate fecha;
     private LocalTime hora;
     private String motivoConsulta;
-    private EstadoTurno estado;
+    private String estado;
 
     public Long getIdTurno() {
         return idTurno;
@@ -65,11 +63,11 @@ public class TurnoEdicion {
         this.motivoConsulta = motivoConsulta;
     }
 
-    public EstadoTurno getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoTurno estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 }

@@ -2,6 +2,7 @@ package service;
 
 import dto.OdontologoEdicion;
 import dto.OdontologoRegistro;
+import entity.EspecialidadOdontologica;
 import entity.Odontologo;
 import entity.OdontologoFactory;
 import exception.DatoInvalidoException;
@@ -12,10 +13,10 @@ import java.util.List;
 
 
 // Implementación del servicio de odontólogos, que se encarga de la lógica de negocio relacionada con los odontólogos.
-// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar odontólogos, validando los datos 
-// y las reglas de negocio correspondientes.
+// Tiene la responsabilidad de registrar, buscar, listar, actualizar y eliminar odontólogos, aplicando
+// las reglas de negocio correspondientes (los campos ya llegan validados por OdontologoController).
 // Utiliza el repositorio de odontólogos para persistir y recuperar los datos de los odontólogos.
-// Utiliza ValidacionesClinica para validar los datos de los odontólogos antes de registrarlos o actualizarlos.
+// Utiliza la fábrica para crear la subclase y convertir la especialidad elegida en la vista.
 
 
 public class OdontologoServiceImpl implements OdontologoService {
@@ -31,13 +32,12 @@ public class OdontologoServiceImpl implements OdontologoService {
 
     @Override
     public Odontologo registrar(OdontologoRegistro datos) {
-        validarDatos(datos);
         if (odontologoRepository.existeMatricula(datos.getMatricula())) {
             throw new DatoInvalidoException(
                     "Ya existe un odontologo con la matricula " + datos.getMatricula() + ".");
         }
         Odontologo odontologo = odontologoFactory.crear(
-                datos.getEspecialidad(), datos.getNombre(), datos.getApellido(),
+                odontologoFactory.buscarEspecialidad(datos.getEspecialidad()), datos.getNombre(), datos.getApellido(),
                 datos.getDni(), datos.getMatricula());
         odontologoRepository.guardar(odontologo);
         return odontologo;
@@ -70,14 +70,16 @@ public class OdontologoServiceImpl implements OdontologoService {
     }
 
     @Override
+    public List<EspecialidadOdontologica> listarEspecialidades() {
+        return odontologoFactory.listarEspecialidades();
+    }
+
+    @Override
     public Odontologo actualizar(OdontologoEdicion edicion) {
-        if (edicion == null) {
-            throw new DatoInvalidoException("Los datos de edicion del odontologo no pueden ser nulos.");
-        }
         OdontologoRegistro datos = edicion.getDatos();
-        validarDatos(datos);
         Odontologo odontologo = buscarPorId(edicion.getIdOdontologo());
-        if (!odontologo.getEspecialidad().equals(datos.getEspecialidad())) {
+        EspecialidadOdontologica especialidad = odontologoFactory.buscarEspecialidad(datos.getEspecialidad());
+        if (!odontologo.getEspecialidad().equals(especialidad)) {
             throw new DatoInvalidoException("La especialidad de un odontologo no puede modificarse.");
         }
         Odontologo mismaMatricula = odontologoRepository.buscarPorMatricula(datos.getMatricula());
@@ -102,20 +104,5 @@ public class OdontologoServiceImpl implements OdontologoService {
         }
         odontologoRepository.eliminar(id);
         return true;
-    }
-
-    private void validarDatos(OdontologoRegistro datos) {
-        if (datos == null) {
-            throw new DatoInvalidoException("Los datos del odontologo no pueden ser nulos.");
-        }
-        ValidacionesClinica.validarNombreNoVacio(datos.getNombre());
-        ValidacionesClinica.validarNombreSoloLetras(datos.getNombre());
-        ValidacionesClinica.validarApellidoNoVacio(datos.getApellido());
-        ValidacionesClinica.validarApellidoSoloLetras(datos.getApellido());
-        ValidacionesClinica.validarDniPositivo(datos.getDni());
-        ValidacionesClinica.validarMatriculaNoVacia(datos.getMatricula());
-        if (datos.getEspecialidad() == null) {
-            throw new DatoInvalidoException("La especialidad no puede ser nula.");
-        }
     }
 }
