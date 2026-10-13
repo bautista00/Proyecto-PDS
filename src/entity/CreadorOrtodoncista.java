@@ -1,5 +1,6 @@
 package entity;
 
+// Creador que usa OdontologoFactory para la especialidad ORTODONCIA: crea instancias de Ortodoncista.
 public final class CreadorOrtodoncista implements CreadorOdontologo {
 
     @Override

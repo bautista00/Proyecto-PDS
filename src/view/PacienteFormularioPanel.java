@@ -14,6 +14,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
 
+// Formulario con los campos del paciente. Se extrajo de PacientePanel (SRP).
+// Traduce los campos a PacienteRegistro y los datos de un paciente existente a los campos.
 final class PacienteFormularioPanel extends JPanel {
 
     private final JTextField txtNombre = new JTextField(15);

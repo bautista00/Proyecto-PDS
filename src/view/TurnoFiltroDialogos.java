@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+// Muestra los diálogos de filtro de turnos (paciente, odontólogo, secretaria, fechas, estado) y ejecuta la consulta.
+// Se extrajo de TurnoPanel (SRP) y entrega cada filtro como AccionFiltroTurno.
 final class TurnoFiltroDialogos {
 
     private final Component padre;

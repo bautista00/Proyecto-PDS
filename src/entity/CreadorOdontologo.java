@@ -1,5 +1,7 @@
 package entity;
 
+// Sabe crear un tipo de odontólogo, nuevo o rehidratado desde el archivo.
+// OdontologoFactory usa uno por especialidad, así sumar una especialidad no obliga a modificar la fábrica (OCP).
 public interface CreadorOdontologo {
 
     EspecialidadOdontologica getEspecialidad();

@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+// Tabla de secretarias en modo solo lectura. Se extrajo de SecretariaPanel (SRP).
+// Al hacer clic en una fila avisa el ID de la secretaria mediante el Consumer que recibe.
 final class SecretariaTablaPanel extends JPanel {
 
     private final DefaultTableModel modelo;

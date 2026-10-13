@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+// Tabla de odontólogos en modo solo lectura. Se extrajo de OdontologoPanel (SRP).
+// Al hacer clic en una fila avisa el ID del odontólogo mediante el Consumer que recibe.
 final class OdontologoTablaPanel extends JPanel {
 
     private final DefaultTableModel modelo;

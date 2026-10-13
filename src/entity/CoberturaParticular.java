@@ -1,5 +1,7 @@
 package entity;
 
+// Cobertura particular: el paciente paga la tarifa base completa del odontólogo.
+// Implementa CoberturaPaciente en lugar del antiguo booleano de obra social (OCP).
 public final class CoberturaParticular implements CoberturaPaciente {
 
     @Override

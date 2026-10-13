@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+// Tabla de pacientes en modo solo lectura. Se extrajo de PacientePanel (SRP).
+// Al hacer clic en una fila avisa el ID del paciente mediante el Consumer que recibe.
 final class PacienteTablaPanel extends JPanel {
 
     private final DefaultTableModel modelo;

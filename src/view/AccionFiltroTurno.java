@@ -1,5 +1,7 @@
 package view;
 
+// Representa un botón de filtro de turnos: el texto que se muestra y la acción que ejecuta.
+// TurnoFiltrosPanel arma sus botones con una lista de estas, así agregar un filtro no cambia el panel (OCP).
 public final class AccionFiltroTurno {
 
     private final String texto;

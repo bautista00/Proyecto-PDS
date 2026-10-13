@@ -15,6 +15,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
 
+// Formulario con los campos del odontólogo. Se extrajo de OdontologoPanel (SRP).
+// Traduce los campos a OdontologoRegistro y un Odontologo existente a los campos.
 final class OdontologoFormularioPanel extends JPanel {
 
     private final JTextField txtNombre = new JTextField(15);

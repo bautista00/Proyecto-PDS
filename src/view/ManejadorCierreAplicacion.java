@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// Al cerrar la ventana principal pregunta si se quieren guardar los datos antes de salir.
+// Se sacó de MainFrame para que la ventana no se ocupe del guardado (SRP).
 public final class ManejadorCierreAplicacion {
 
     private final JFrame ventana;

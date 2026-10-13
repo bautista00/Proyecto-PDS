@@ -6,6 +6,8 @@ import entity.Turno;
 import java.time.LocalDate;
 import java.util.List;
 
+// Consultas de turnos que ofrece la capa de servicio.
+// Es una de las partes de TurnoService; la implementa TurnoConsultaService (ISP).
 public interface ConsultaTurnos {
 
     Turno buscarPorId(Long id);

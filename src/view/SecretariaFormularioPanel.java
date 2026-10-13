@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+// Formulario con los campos de la secretaria. Se extrajo de SecretariaPanel (SRP).
+// Traduce los campos a SecretariaRegistro y una Secretaria existente a los campos.
 final class SecretariaFormularioPanel extends JPanel {
 
     private final JTextField txtNombre = new JTextField(15);

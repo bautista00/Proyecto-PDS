@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+// Catálogo de las coberturas disponibles (Particular, Obra Social), indexadas por código.
+// Sumar una cobertura nueva es registrarla acá, sin tocar Paciente ni la persistencia (OCP).
 public final class CatalogoCoberturas {
 
     private final Map<String, CoberturaPaciente> coberturasPorCodigo = new LinkedHashMap<>();
